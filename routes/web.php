@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\QuestionsController;
+use App\Http\Controllers\QATController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +22,7 @@ Route::get('/', function () {
 Route::get('/questionnaire', function () {
     return view('remplir');
 });
+
+Route::post('/post/question/add', [QuestionsController::class, 'store'])->name("addquestion");
+Route::post('/post/question/fuzzysearch', [QuestionsController::class, 'fuzzysearch'])->name("fuzzysearchquestion");
+Route::post('/post/qat/get', [QATController::class, 'get'])->name("getqat");

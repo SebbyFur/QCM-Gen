@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Answer extends Model
+class QuestionsTags extends Model
 {
     use HasFactory;
 
+    protected $table = 'questions_tags';
+
     protected $fillable = [
-        'answer',
+        'question_id',
+        'tag_id'
     ];
 }

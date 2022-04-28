@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('questions', function (Blueprint $table) {
+        Schema::create('questions_tags', function (Blueprint $table) {
             $table->id();
-            $table->string('question')->unique();
+            $table->foreignId('id_question')->references('id')->on('questions');
+            $table->foreignId('id_tag')->references('id')->on('tags');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('questions');
+        Schema::dropIfExists('questions_tags');
     }
 };
