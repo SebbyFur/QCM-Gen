@@ -10,9 +10,10 @@ class QuestionsTags extends Model
     use HasFactory;
 
     protected $table = 'questions_tags';
+    public $timestamps = false;
 
     protected $fillable = [
-        'question_id',
-        'tag_id'
+        'id_tag',
+        'id_question'
     ];
 }

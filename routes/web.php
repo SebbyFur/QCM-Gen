@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QuestionsController;
+use App\Http\Controllers\AnswersController;
+use App\Http\Controllers\QuestionsTagsController;
 use App\Http\Controllers\QATController;
 
 /*
@@ -17,12 +19,28 @@ use App\Http\Controllers\QATController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('/');
 
-Route::get('/questionnaire', function () {
-    return view('remplir');
-});
+Route::get('/menu', function () {
+    return view('qat.menu');
+})->name('qatmenu');
 
-Route::post('/post/question/add', [QuestionsController::class, 'store'])->name("addquestion");
+Route::get('/edit/{id}', [QATController::class, 'read']);
+
+//Questions
+Route::post('/post/question/create', [QuestionsController::class, 'create'])->name("createquestion");
+Route::post('/post/question/update', [QuestionsController::class, 'update'])->name("updatequestion");
 Route::post('/post/question/fuzzysearch', [QuestionsController::class, 'fuzzysearch'])->name("fuzzysearchquestion");
-Route::post('/post/qat/get', [QATController::class, 'get'])->name("getqat");
+
+//Answers
+Route::post('/post/answer/create', [AnswersController::class, 'create'])->name("createanswer");
+Route::post('/post/answer/update', [AnswersController::class, 'update'])->name("updateanswer");
+Route::post('/post/answer/delete', [AnswersController::class, 'delete'])->name("deleteanswer");
+
+//Tags
+Route::post('/post/tag/create', [QuestionsTagsController::class, 'create'])->name("createtag");
+Route::post('/post/tag/delete', [QuestionsTagsController::class, 'delete'])->name("deletetag");
+
+//QAT
+Route::post('/post/qat/read', [QATController::class, 'read'])->name("readqat");
+Route::post('/post/qat/delete', [QATController::class, 'delete'])->name("deleteqat");

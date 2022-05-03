@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddQuestionRequest extends FormRequest
+class DeleteQuestionsTagsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,19 +24,22 @@ class AddQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-            'question' => ['required']
+            'id_tag' => ['required'],
+            'id_question' => ['required']
         ];
     }
 
     public function messages() {
         return [
-            'question.required' => "Entrez une question !",
+            'id_tag.required' => "Entrez un id de tag !",
+            'id_question.required' => "Entrez un id de question !"
         ];
     }
 
     public function attributes() {
         return [
-            'question' => 'question',
+            'id_tag' => 'id_tag',
+            'id_question'  => 'id_question'
         ];
     }
 }

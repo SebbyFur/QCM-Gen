@@ -10,6 +10,8 @@ class Answer extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id_question',
         'answer',
+        'is_correct'
     ];
 }

@@ -5,22 +5,38 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\AddQuestionRequest;
+use App\Http\Requests\CreateQuestionRequest;
+use App\Http\Requests\UpdateQuestionRequest;
 use App\Http\Requests\FuzzySearchQuestionRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class QuestionsController extends Controller
 {
-    public function store(AddQuestionRequest $request) {
+    public function create(CreateQuestionRequest $request) {
         $request->validated();
         
-        $a = DB::table('questions')->where('question', $request['question'])->first();
-        if ($a != null) return ['true', $a->id];
-
         $a = Question::create(['question' => $request['question']]);
         $a->save();
         
-        return ['false', $a->id];
+        return ['true', $a->id];
+    }
+
+    public function update(UpdateQuestionRequest $request) {
+        $request->validated();
+
+        try {
+            if (preg_replace("/\s+/", "", $request->question) == "")
+                throw new InvalidArgumentException("O");
+
+            $a = Question::where('id', $request->id)->firstOrFail();
+            $a->update(['question' => $request->question]);
+        } catch (ModelNotFoundException $err) {
+            return 'false';
+        } catch (InvalidArgumentException $err) {
+            return 'false';
+        }
+        
+        return 'true';
     }
 
     public function fuzzysearch(FuzzySearchQuestionRequest $request) {
