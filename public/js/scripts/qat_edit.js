@@ -14,7 +14,9 @@ function updateQuestion(e) {
         },
 
         error: function(data) {
-            console.log(data.responseJSON.message);
+            console.log("tg");
+            $('.alert').empty();
+            $(".alert").append(createAlert(data.responseJSON.message));
         }
     });
 }
@@ -110,6 +112,15 @@ function updateBelongingTag(e) {
             id_question: ID_QUESTION
         }
     });
+}
+
+function createAlert(text) {
+    return $(
+    `<div class="border border-4 alert alert-danger alert-dismissible fade show w-50 d-flex">
+        <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
+        <div class="alert-text">` + text + `</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>`);
 }
 
 $('.checkboxes').on('click', updateBelongingTag);

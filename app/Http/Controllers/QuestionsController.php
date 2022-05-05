@@ -9,14 +9,27 @@ use App\Http\Requests\CreateQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
 use App\Http\Requests\FuzzySearchQuestionRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 
 class QuestionsController extends Controller
 {
     public function create(CreateQuestionRequest $request) {
         $request->validated();
         
-        $a = Question::create(['question' => $request['question']]);
-        $a->save();
+        try {
+            $a = Question::create(['question' => $request['question']]);
+            $a->save();
+        } catch (QueryException $err) {
+            $id = Question::where(['question' => $request['question']])->first()->id;
+
+            $returnData = array(
+                'status' => 'error',
+                'id' => $id,
+                'message' => "Une question avec cet intitulé existe déjà. #$id"
+            );
+
+            return response()->json($returnData, 500);
+        }
         
         return ['true', $a->id];
     }
@@ -34,6 +47,16 @@ class QuestionsController extends Controller
             return 'false';
         } catch (InvalidArgumentException $err) {
             return 'false';
+        } catch (QueryException $err) {
+            $id = Question::where(['question' => $request['question']])->first()->id;
+
+            $returnData = array(
+                'status' => 'error',
+                'id' => $id,
+                'message' => "Une question avec cet intitulé existe déjà. #$id"
+            );
+
+            return response()->json($returnData, 500);
         }
         
         return 'true';

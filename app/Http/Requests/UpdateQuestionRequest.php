@@ -32,7 +32,7 @@ class UpdateQuestionRequest extends FormRequest
     public function messages() {
         return [
             'id.required' => 'Saisissez un id !',
-            'question.required' => 'La question est nécessaire !'
+            'question.required' => "Le champ de question ne peut pas être vide !"
         ];
     }
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\AnswersController;
 use App\Http\Controllers\QuestionsTagsController;
 use App\Http\Controllers\QATController;
+use App\Http\Controllers\GroupsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,26 +22,41 @@ Route::get('/', function () {
     return view('welcome');
 })->name('/');
 
-Route::get('/menu', function () {
-    return view('qat.menu');
-})->name('qatmenu');
+Route::get('/question/menu', [QATController::class, 'readAll'])->name('qatmenu');
 
-Route::get('/edit/{id}', [QATController::class, 'read']);
+Route::get('/question/edit/{id}', [QATController::class, 'read'])->name('editquestion');
+
+Route::get('/group/menu', [GroupsController::class, 'read'])->name('groupmenu');
 
 //Questions
-Route::post('/post/question/create', [QuestionsController::class, 'create'])->name("createquestion");
-Route::post('/post/question/update', [QuestionsController::class, 'update'])->name("updatequestion");
-Route::post('/post/question/fuzzysearch', [QuestionsController::class, 'fuzzysearch'])->name("fuzzysearchquestion");
+Route::controller(QuestionsController::class)->group(function () {
+    Route::post('/post/question/create', 'create')->name("createquestion");
+    Route::post('/post/question/update', 'update')->name("updatequestion");
+    Route::post('/post/question/fuzzysearch', 'fuzzysearch')->name("fuzzysearchquestion");
+});
 
 //Answers
-Route::post('/post/answer/create', [AnswersController::class, 'create'])->name("createanswer");
-Route::post('/post/answer/update', [AnswersController::class, 'update'])->name("updateanswer");
-Route::post('/post/answer/delete', [AnswersController::class, 'delete'])->name("deleteanswer");
+Route::controller(AnswersController::class)->group(function () {
+    Route::post('/post/answer/create', 'create')->name("createanswer");
+    Route::post('/post/answer/update', 'update')->name("updateanswer");
+    Route::post('/post/answer/delete', 'delete')->name("deleteanswer");
+});
 
 //Tags
-Route::post('/post/tag/create', [QuestionsTagsController::class, 'create'])->name("createtag");
-Route::post('/post/tag/delete', [QuestionsTagsController::class, 'delete'])->name("deletetag");
+Route::controller(QuestionsTagsController::class)->group(function () {
+    Route::post('/post/tag/create', 'create')->name("createtag");
+    Route::post('/post/tag/delete', 'delete')->name("deletetag");
+});
 
 //QAT
-Route::post('/post/qat/read', [QATController::class, 'read'])->name("readqat");
-Route::post('/post/qat/delete', [QATController::class, 'delete'])->name("deleteqat");
+Route::controller(QATController::class)->group(function () {
+    Route::post('/post/qat/read', 'read')->name("readqat");
+    Route::post('/post/qat/delete', 'delete')->name("deleteqat");
+});
+
+//Groups
+Route::controller(GroupsController::class)->group(function () {
+    Route::post('/post/group/create', 'create')->name("creategroup");
+    Route::post('/post/group/update', 'update')->name("updategroup");
+    Route::post('/post/group/delete', 'delete')->name("deletegroup");
+});

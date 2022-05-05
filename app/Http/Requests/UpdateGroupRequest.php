@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateQuestionRequest extends FormRequest
+class UpdateGroupRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,19 +24,22 @@ class CreateQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-            'question' => ['required']
+            'name_group' => ['required'],
+            'id_group' => ['required']
         ];
     }
 
     public function messages() {
         return [
-            'question.required' => "Le champ de question ne peut pas être vide !",
+            'name_group.required' => "Le groupe de classe doit avoir un nom !",
+            'id_group.required' => "Il faut donner un identifiant de groupe dans la requête !"
         ];
     }
 
     public function attributes() {
         return [
-            'question' => 'question',
+            'name_group' => 'name_group',
+            'id_group' => 'id_group'
         ];
     }
 }
