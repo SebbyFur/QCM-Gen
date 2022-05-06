@@ -52,15 +52,9 @@
             </div>
             @endforeach
         </div>
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <button type='button' class='add-entry btn btn-success w-25'><i class="bi bi-plus-circle-fill icon-add"></i></button>
-            </div>
+        <div class="d-flex justify-content-center">
+            <button type='button' class='add-entry btn btn-success w-25'><i class="bi bi-plus-circle-fill icon-add"></i></button>
         </div>
-    </div>
-
-    <div class="fixed-bottom w-100" role="alert">
-        <div class="d-flex justify-content-center alert"></div>
     </div>
 </div>
 
@@ -80,6 +74,6 @@
     const REDIRECT_HOME = "{{ route('qatmenu') }}";
 </script>
 
-<script src="{{ asset('js/scripts/qat_edit.js') }}"></script>
+<script src="{{ asset('js/scripts/qat_edit2.js') }}"></script>
 
 @endsection

@@ -46,9 +46,17 @@ class QATController extends Controller
             QuestionsTags::where(['id_question' => $request->id])->delete();
             $q->delete();
         } catch (ModelNotFoundException $err) {
-            return 'false';
+            return response()->json(
+            array(
+                'status' => 'error',
+                'message' => "Cette question n'existe pas"
+            ), 500);
         }
 
-        return 'true';
+        return response()->json(
+        array(
+            'status' => 'success',
+            'id' => $q->id
+        ), 200);
     }
 }

@@ -14,7 +14,6 @@ function updateQuestion(e) {
         },
 
         error: function(data) {
-            console.log("tg");
             $('.alert').empty();
             $(".alert").append(createAlert(data.responseJSON.message));
         }

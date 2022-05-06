@@ -28,10 +28,14 @@ class QuestionsController extends Controller
                 'message' => "Une question avec cet intitulé existe déjà. #$id"
             );
 
-            return response()->json($returnData, 500);
+            return response()->json($returnData, 422);
         }
-        
-        return ['true', $a->id];
+
+        return response()->json(
+        array(
+            'status' => 'success',
+            'id' => $a->id,
+        ), 200);
     }
 
     public function update(UpdateQuestionRequest $request) {

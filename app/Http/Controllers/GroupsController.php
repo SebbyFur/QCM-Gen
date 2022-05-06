@@ -33,8 +33,13 @@ class GroupsController extends Controller
 
             return response()->json($returnData, 500);
         }
+
+        $returnData = array(
+            'status' => 'success',
+            'id' => $a->id
+        );
         
-        return ['true', $a->id];
+        return response()->json($returnData, 200);
     }
 
     public function update(UpdateGroupRequest $request) {

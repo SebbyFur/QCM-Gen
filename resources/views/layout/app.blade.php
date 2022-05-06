@@ -32,5 +32,8 @@
 
     @yield('content')
 
+    <div class="fixed-bottom w-100" role="alert">
+        <div class="d-flex justify-content-center alert"></div>
+    </div>
 </body>
 </html>

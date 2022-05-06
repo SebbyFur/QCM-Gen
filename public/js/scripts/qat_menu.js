@@ -1,61 +1,101 @@
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
-
 function createQuestion() {
-    $.ajax({
-        type: 'POST',
-        url: CREATE_QUESTION_ROUTE,
-        data: {
-            question: $('.question-input')[0].value
+    const myRequest = new Request(CREATE_QUESTION_ROUTE, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
         },
 
-        success: function(data) {
-            REDIRECT_QUESTION = (REDIRECT_QUESTION.slice(0, -1)) + data[1];
-            window.location.href = REDIRECT_QUESTION;
-        },
-
-        error: function(data) {
-            $('.alert').empty();
-            $(".alert").append(createAlert(data.responseJSON.message, data.responseJSON['id'] != undefined ? data.responseJSON['id'] : undefined));
-        }
+        body: JSON.stringify({
+            question: this.previousElementSibling.value
+        })
     });
-}
 
-function rmQuestion(e) {
-    $.ajax({
-        type: 'POST',
-        url: DELETE_QAT_ROUTE,
-        data: {
-            id: e.currentTarget.id
-        },
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
 
-        success: function(data) {
-            if (data === 'true') {
-                e.currentTarget.parentNode.parentNode.parentNode.remove();
+        throw response.json();
+    })
+    .then(data => {
+        REDIRECT_QUESTION = (REDIRECT_QUESTION.slice(0, -1)) + data.id;
+        window.location.href = REDIRECT_QUESTION;
+    })
+    .catch(error => {
+        error.then(error => {
+            let add = createAlert(error.message);
+            if (error.id != undefined) {
+                REDIRECT_QUESTION = (REDIRECT_QUESTION.slice(0, -1)) + error.id;
+                let button = document.createElement('a');
+                button.setAttribute('type', 'button');
+                button.setAttribute('class', 'btn btn-primary mx-2');
+                button.setAttribute('href', REDIRECT_QUESTION);
+                button.innerText = "S'y rendre";
+                add.children[1].append(button);
             }
-        }
+
+            document.getElementsByClassName('alert')[0].textContent = '';
+            document.getElementsByClassName('alert')[0].append(add);
+        });
     });
 }
 
-function createAlert(text, id) {
-    let add = '';
-    if (id !== undefined) {
-        REDIRECT_QUESTION = (REDIRECT_QUESTION.slice(0, -1)) + id;
-        add = `<a type='button' class='btn btn-primary mx-2' href=` + REDIRECT_QUESTION + `>S'y rendre</a>`;
-    }
+function deleteQuestion() {
+    const myRequest = new Request(DELETE_QAT_ROUTE, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
 
-    let $ret = $(
-    `<div class="border border-4 alert alert-danger alert-dismissible fade show w-50 d-flex">
-        <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
-        <div class="alert-text">` + text + add + `</div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>`);
+        body: JSON.stringify({
+            id: this.id
+        })
+    });
 
-    return $ret;
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .then(data => {
+        console.log(data);
+        this.parentNode.parentNode.parentNode.remove();
+    })
+    .catch(error => {
+        error.then(error => {
+            document.getElementsByClassName('alert')[0].textContent = '';
+            document.getElementsByClassName('alert')[0].append(createAlert(error.message));
+        });
+    });
 }
 
-$('.add-question').on('click', createQuestion);
-$('.rm-question').on('click', rmQuestion);
+function createAlert(text) {
+    let mainDiv = document.createElement('div');
+    mainDiv.setAttribute('class', "border border-4 alert alert-danger alert-dismissible fade show w-50 d-flex align-items-center");
+
+    let img = document.createElement('i');
+    img.setAttribute('class', 'bi bi-exclamation-triangle-fill flex-shrink-0 me-2');
+
+    let div = document.createElement('div');
+    div.setAttribute('class', 'alert-text');
+    div.innerText = text;
+
+    let btn = document.createElement('button');
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('class', 'btn-close');
+    btn.setAttribute('data-bs-dismiss', 'alert');
+
+    mainDiv.append(img);
+    mainDiv.append(div);
+    mainDiv.append(btn);
+
+    return mainDiv;
+}
+
+for (let create of document.getElementsByClassName('add-question'))
+    create.addEventListener('click', createQuestion);
+
+for (let del of document.getElementsByClassName('rm-question'))
+    del.addEventListener('click', deleteQuestion);

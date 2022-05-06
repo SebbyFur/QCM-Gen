@@ -23,7 +23,11 @@ class AnswersController extends Controller
             return ['false', -1];
         }
         
-        return ['true', $a->id];
+        return response()->json(
+        array(
+            'status' => 'success',
+            'id' => $a->id
+        ), 200);
     }
 
     public function delete(DeleteAnswerRequest $request) {

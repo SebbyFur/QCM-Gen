@@ -17,7 +17,7 @@
         <div class='container flex-grow-1 d-flex my-2'>
             <a href='{{ route('editquestion', $a['id']) }}' class="list-group-item list-group-item-action mx-2">#{{ $a['id'] }}. {{ $a['question'] }}</a>
             <div class='dropdown dropend'>
-                <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='h-100 btn btn-danger rm-question'><i class="bi bi-dash-circle-fill"></i></button>
+                <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='h-100 btn btn-danger'><i class="bi bi-dash-circle-fill"></i></button>
                 <div class='dropdown-menu px-3' aria-labelledby="dropdownMenuLink">
                     <p class='text-center'>Vous êtes sur le point de supprimer cette question et toutes ses réponses. Êtes-vous sûr ?</p>
                     <button id='{{ $a['id'] }}' type='button' class='btn btn-primary mx-1 rm-question'>Oui</button>
@@ -26,11 +26,6 @@
             </div>
         </div>
         @endforeach
-    </div>
-
-    
-    <div class="fixed-bottom w-100" role="alert">
-        <div class="d-flex justify-content-center alert"></div>
     </div>
 </div>
 
