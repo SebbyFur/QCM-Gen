@@ -174,7 +174,7 @@ function createGroup() {
         dropdown.children[1].children[2].setAttribute('class', 'btn btn-danger mx-1');
         dropdown.children[1].children[2].innerText = 'Non';
 
-        document.getElementsByClassName('list-group')[0].append(toAppend);
+        document.querySelector('.list-group').append(toAppend);
     })
     .catch(error => {
         error.then(error => {
@@ -203,8 +203,8 @@ function createAlert(text) {
     mainDiv.append(div);
     mainDiv.append(btn);
 
-    document.getElementsByClassName('alert')[0].textContent = '';
-    document.getElementsByClassName('alert')[0].append(mainDiv);
+    document.querySelector('.alert').textContent = '';
+    document.querySelector('.alert').append(mainDiv);
 }
 
 for (let item of document.getElementsByClassName('group-item'))
@@ -213,4 +213,4 @@ for (let item of document.getElementsByClassName('group-item'))
 for (let group of document.getElementsByClassName('rm-group'))
     group.addEventListener('click', deleteGroup);
 
-document.getElementsByClassName('add-group')[0].addEventListener('click', createGroup);
+document.querySelector('.add-group').addEventListener('click', createGroup);

@@ -21,7 +21,8 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <a class="nav-link">QCMs</a>
                     <a class="nav-link" href="{{ route('qatmenu') }}">Questions</a>
-                    <a class="nav-link" href="{{ route('groupmenu') }}">Groupes</a>
+                    <a class="nav-link" href="{{ route('groupsmenu') }}">Groupes</a>
+                    <a class="nav-link" href="{{ route('studentsmenu') }}">Etudiants</a>
                 </ul>
                 <div class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Rechercher une question...">

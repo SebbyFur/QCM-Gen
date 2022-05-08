@@ -74,6 +74,6 @@
     const REDIRECT_HOME = "{{ route('qatmenu') }}";
 </script>
 
-<script src="{{ asset('js/scripts/qat_edit2.js') }}"></script>
+<script src="{{ asset('js/scripts/qat_edit.js') }}"></script>
 
 @endsection

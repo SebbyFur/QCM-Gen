@@ -34,8 +34,8 @@ function createQuestion() {
                 add.children[1].append(button);
             }
 
-            document.getElementsByClassName('alert')[0].textContent = '';
-            document.getElementsByClassName('alert')[0].append(add);
+            document.querySelector('.alert').textContent = '';
+            document.querySelector('.alert').append(add);
         });
     });
 }
@@ -65,8 +65,8 @@ function deleteQuestion() {
     })
     .catch(error => {
         error.then(error => {
-            document.getElementsByClassName('alert')[0].textContent = '';
-            document.getElementsByClassName('alert')[0].append(createAlert(error.message));
+            document.querySelector('.alert').textContent = '';
+            document.querySelector('.alert').append(createAlert(error.message));
         });
     });
 }

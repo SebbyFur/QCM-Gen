@@ -22,11 +22,15 @@ Route::get('/', function () {
     return view('welcome');
 })->name('/');
 
-Route::get('/question/menu', [QATController::class, 'readAll'])->name('qatmenu');
+Route::get('/question/{id}', [QATController::class, 'read'])->name('editquestion');
 
-Route::get('/question/edit/{id}', [QATController::class, 'read'])->name('editquestion');
+Route::get('/questions/menu', [QATController::class, 'readAll'])->name('qatmenu');
 
-Route::get('/group/menu', [GroupsController::class, 'read'])->name('groupmenu');
+Route::get('/students/menu', function() {
+    return view('students.menu');
+})->name('studentsmenu');
+
+Route::get('/groups/menu', [GroupsController::class, 'read'])->name('groupsmenu');
 
 //Questions
 Route::controller(QuestionsController::class)->group(function () {

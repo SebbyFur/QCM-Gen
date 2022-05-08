@@ -1,134 +1,262 @@
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
+function updateQuestion() {
+    const myRequest = new Request(UPDATE_QUESTION_ROUTE, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
 
-function updateQuestion(e) {
-    $.ajax({
-        type: 'POST',
-        url: UPDATE_QUESTION_ROUTE,
-        data: {
+        body: JSON.stringify({
             id: ID_QUESTION,
-            question: e.currentTarget.value
+            question: this.value
+        })
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .catch(error => {
+        error.then(error => {
+            document.querySelector('.alert').textContent = '';
+            document.querySelector('.alert').append(createAlert(error.message));
+        });
+    });
+}
+
+function deleteQuestion() {
+    const myRequest = new Request(DELETE_QAT_ROUTE, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
         },
 
-        error: function(data) {
-            $('.alert').empty();
-            $(".alert").append(createAlert(data.responseJSON.message));
-        }
+        body: JSON.stringify({
+            id: ID_QUESTION,
+            question: this.value
+        })
     });
-}
 
-function rmQuestion() {
-    $.ajax({
-        type: 'POST',
-        url: DELETE_QAT_ROUTE,
-        data: {
-            id: ID_QUESTION
-        },
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
 
-        success: function(data) {
-            if (data === 'true') {
-                window.location.href = REDIRECT_HOME;
-            }
-        }
-    });
-}
-
-function addAnswer() {
-    $.ajax({
-        type: 'POST',
-        url: CREATE_ANSWER_ROUTE,
-        data: {
-            id_question: ID_QUESTION,
-            answer: ""
-        },
-
-        success: function(data) {
-            if (data[0] === 'true') {
-                let el = $(`<div class='mb-4'><div class='flex-grow-1 d-flex answer-div' id=` + data[1] + `></div></div>`);
-
-                
-                let checkbox = $("<input class='form-check-input mx-2 my-3 is_correct' type='checkbox'>");
-                let input = $("<input class='form-control mx-2 answer' type='text' placeholder='Entrez une réponse...'>");
-                let rm = $("<button type='button' class='btn btn-danger ml-2 rm-answer'><i class='bi bi-dash-circle-fill'></i></button>)");
-                checkbox.on('click', updateAnswer);
-                input.on('blur', updateAnswer);
-                rm.on('click', rmAnswer);
-
-                el.children().first().append(checkbox);
-                el.children().first().append(input);
-                el.children().first().append(rm);
-                $('.answers-div').append(el);
-            }
-        }
-    });
-}
-
-function rmAnswer(e) {
-    $.ajax({
-        type: 'POST',
-        url: DELETE_ANSWER_ROUTE,
-        data: {
-            id_answer: e.currentTarget.parentNode.id
-        },
-
-        success: function() {
-            e.currentTarget.parentNode.parentNode.remove();
-        }
-    });
-}
-
-function updateAnswer(e) {
-    let answer = e.currentTarget.parentNode.children[1].value;
-
-    if (answer === '') {
-        e.currentTarget.parentNode.children[0].checked = false;
-        e.currentTarget.parentNode.children[0].disabled = true;
-    } else {
-        e.currentTarget.parentNode.children[0].disabled = false;
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: UPDATE_ANSWER_ROUTE,
-        data: {
-            id_answer: e.currentTarget.parentNode.id,
-            is_correct: e.currentTarget.parentNode.children[0].checked ? 1 : 0,
-            answer: answer
-        }
-    });
-    
-}
-
-function updateBelongingTag(e) {
-    $.ajax({
-        type: 'POST',
-        url: e.currentTarget.checked ? CREATE_TAG_ROUTE : DELETE_TAG_ROUTE,
-        data: {
-            id_tag: e.currentTarget.id,
-            id_question: ID_QUESTION
-        }
+        throw response.json();
+    })
+    .then(data => {
+        console.log(data);
+        window.location.href = REDIRECT_HOME;
+    })
+    .catch(error => {
+        error.then(error => {
+            document.querySelector('.alert').textContent = '';
+            document.querySelector('.alert').append(createAlert(error.message));
+        });
     });
 }
 
 function createAlert(text) {
-    return $(
-    `<div class="border border-4 alert alert-danger alert-dismissible fade show w-50 d-flex">
-        <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
-        <div class="alert-text">` + text + `</div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>`);
+    let mainDiv = document.createElement('div');
+    mainDiv.setAttribute('class', "border border-4 alert alert-danger alert-dismissible fade show w-50 d-flex");
+
+    let img = document.createElement('i');
+    img.setAttribute('class', 'bi bi-exclamation-triangle-fill flex-shrink-0 me-2');
+
+    let div = document.createElement('div');
+    div.setAttribute('class', 'alert-text');
+    div.innerText = text;
+
+    let btn = document.createElement('button');
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('class', 'btn-close');
+    btn.setAttribute('data-bs-dismiss', 'alert');
+
+    mainDiv.append(img);
+    mainDiv.append(div);
+    mainDiv.append(btn);
+
+    return mainDiv;
 }
 
-$('.checkboxes').on('click', updateBelongingTag);
+function createAnswer() {
+    const myRequest = new Request(CREATE_ANSWER_ROUTE, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
 
-$('.question-input').on('blur', updateQuestion);
-$('.rm-question').on('click', rmQuestion);
+        body: JSON.stringify({
+            id_question: ID_QUESTION,
+            answer: ""
+        })
+    });
 
-$(".btn-success").first().on("click", addAnswer);
-$(".rm-answer").on('click', rmAnswer);
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
 
-$(".answer").on('blur', updateAnswer);
-$(".is_correct").on('click', updateAnswer);
+        throw response.json();
+    })
+    .then(data => {
+        let mainDiv = document.createElement('div');
+        mainDiv.setAttribute('class', 'mb-4');
+
+        let childDiv = document.createElement('div');
+        childDiv.setAttribute('class', 'flex-grow-1 d-flex answer-div');
+        childDiv.setAttribute('id', data.id);
+        
+        let checkbox = document.createElement('input');
+        checkbox.setAttribute('class', 'form-check-input mx-2 my-3 is_correct');
+        checkbox.setAttribute('type', 'checkbox');
+
+        let input = document.createElement('input');
+        input.setAttribute('class', 'form-control mx-2 answer');
+        input.setAttribute('type', 'text');
+        input.setAttribute('placeholder', 'Entrez une réponse...');
+        
+        let button = document.createElement('button');
+        button.setAttribute('class', 'btn btn-danger ml-2 rm-answer');
+        button.setAttribute('tyoe', 'button');
+        
+        let img = document.createElement('i');
+        img.setAttribute('class', 'bi bi-dash-circle-fill');
+        
+        checkbox.addEventListener('click', updateAnswer);
+        input.addEventListener('blur', updateAnswer);
+        button.addEventListener('click', deleteAnswer);
+
+        button.append(img);
+
+        childDiv.append(checkbox);
+        childDiv.append(input);
+        childDiv.append(button);
+
+        mainDiv.append(childDiv);
+
+        document.querySelector('.answers-div').append(mainDiv);
+    })
+    .catch(error => {
+        error.then(error => {
+            document.querySelector('.alert').textContent = '';
+            document.querySelector('.alert').append(createAlert(error.message));
+        });
+    });
+}
+
+function deleteAnswer() {
+    const myRequest = new Request(DELETE_ANSWER_ROUTE, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+
+        body: JSON.stringify({
+            id_answer : this.parentNode.id
+        })
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .then(data => {
+        console.log(data);
+        this.parentNode.parentNode.remove();
+    })
+    .catch(error => {
+        error.then(error => {
+            console.log(error); 
+            document.querySelector('.alert').textContent = '';
+            document.querySelector('.alert').append(createAlert(error.message));
+        });
+    });
+}
+
+function updateAnswer() {
+    let answer = this.parentNode.children[1].value;
+
+    if (answer === '') {
+        this.parentNode.children[0].checked = false;
+        this.parentNode.children[0].disabled = true;
+    } else {
+        this.parentNode.children[0].disabled = false;
+    }
+
+    const myRequest = new Request(UPDATE_ANSWER_ROUTE, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+
+        body: JSON.stringify({
+            id_answer: this.parentNode.id,
+            is_correct: this.parentNode.children[0].checked ? 1 : 0,
+            answer: answer
+        })
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .catch(error => {
+        error.then(error => {
+            document.querySelector('.alert').textContent = '';
+            document.querySelector('.alert').append(createAlert(error.message));
+        });
+    });
+}
+
+function updateBelongingTag() {
+    const myRequest = new Request(this.checked ? CREATE_TAG_ROUTE : DELETE_TAG_ROUTE, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+
+        body: JSON.stringify({
+            id_tag: this.id,
+            id_question: ID_QUESTION
+        })
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .catch(error => {
+        error.then(error => {
+            document.querySelector('.alert').textContent = '';
+            document.querySelector('.alert').append(createAlert(error.message));
+        });
+    });
+}
+
+document.querySelector('.rm-question').addEventListener('click', deleteQuestion);
+document.querySelector('.question-input').addEventListener('blur', updateQuestion);
+document.querySelector('.btn-success').addEventListener('click', createAnswer);
+
+for (let checkbox of document.getElementsByClassName('checkboxes'))
+    checkbox.addEventListener('click', updateBelongingTag);
+
+for (let rmbtn of document.getElementsByClassName('rm-answer'))
+    rmbtn.addEventListener('click', deleteAnswer);
+
+for (let checkbox of document.getElementsByClassName('is_correct'))
+    checkbox.addEventListener('click', updateAnswer);
+
+for (let input of document.getElementsByClassName('answer'))
+    input.addEventListener('blur', updateAnswer);

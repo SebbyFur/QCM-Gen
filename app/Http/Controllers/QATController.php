@@ -20,7 +20,7 @@ class QATController extends Controller
 {
     public function read(Request $request) {
         $ret = [
-            'question' => Question::where(['id' => $request->id])->first()
+            'question' => Question::findOrFail($request->id)
             ->makeHidden(['created_at', 'updated_at']),
             'answers'  => Answer::where('id_question', $request->id)->get()
             ->makeHidden(['created_at', 'updated_at', 'id_question', 'id_answer']),
