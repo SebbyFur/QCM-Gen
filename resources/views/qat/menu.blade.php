@@ -29,12 +29,7 @@
     </div>
 </div>
 
-<script>
-    const CREATE_QUESTION_ROUTE = "{{ route('createquestion') }}";
-    const DELETE_QAT_ROUTE = "{{ route('deleteqat') }}"
-    let REDIRECT_QUESTION = "{{ route('editquestion', 0) }}";
-</script>
-
+@routes
 <script src="{{ asset('js/scripts/qat_menu.js') }}"></script>
 
 @endsection

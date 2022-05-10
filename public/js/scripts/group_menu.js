@@ -9,6 +9,7 @@ function replaceByInput() {
     toAppend.setAttribute('type', "text");
     toAppend.setAttribute('placeholder', "Entrez un nom de groupe...");
     toAppend.setAttribute('old', text);
+    toAppend.setAttribute('data-id', this.getAttribute('data-id'));
     toAppend.setAttribute('value', text);
     
     parent.append(toAppend);
@@ -37,7 +38,7 @@ function replaceByDiv() {
 }
 
 function updateGroupName() {
-    const myRequest = new Request(UPDATE_GROUP_ROUTE, {
+    const myRequest = new Request(route('updategroup'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -45,7 +46,7 @@ function updateGroupName() {
         },
 
         body: JSON.stringify({
-            id_group: this.parentNode.id,
+            id_group: this.getAttribute('data-id'),
             name_group: this.value
         })
     });
@@ -69,7 +70,9 @@ function updateGroupName() {
 }
 
 function deleteGroup() {
-    const myRequest = new Request(DELETE_GROUP_ROUTE, {
+    console.log(this);
+    console.log(this.getAttribute('data-id'));
+    const myRequest = new Request(route('deletegroup'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -77,7 +80,7 @@ function deleteGroup() {
         },
 
         body: JSON.stringify({
-            id_group: this.id
+            id_group: this.getAttribute('data-id')
         })
     });
 
@@ -89,6 +92,7 @@ function deleteGroup() {
     })
     .then(data => {
         this.parentNode.parentNode.parentNode.remove();
+        document.querySelector('.students').textContent = '';
     })
     .catch(error => {
         error.then(error => {
@@ -100,7 +104,7 @@ function deleteGroup() {
 function createGroup() {
     let name_group = this.previousElementSibling.value;
 
-    const myRequest = new Request(CREATE_GROUP_ROUTE, {
+    const myRequest = new Request(route('creategroup'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -119,64 +123,10 @@ function createGroup() {
         throw response.json();
     })
     .then(data => {
-        let toAppend = document.createElement('div');
-        toAppend.setAttribute('class', 'container d-flex mb-2');
-
-        toAppend.append(document.createElement('div'));
-        toAppend.append(document.createElement('div'));
-        console.log(toAppend.children);
-
-        let group = toAppend.children[0];
-        let dropdown = toAppend.children[1];
-
-        group.setAttribute('class', 'd-flex list-group-item w-100');
-        group.append(document.createElement('div'));
-        group.append(document.createElement('div'));
-
-        group.children[0].innerText = '#' + data.id + '.';
-
-        group.children[1].setAttribute('id', data.id);
-        group.children[1].setAttribute('class', 'mx-1');
-
-        group.children[1].append(document.createElement('div'));
-        group.children[1].children[0].setAttribute('class', 'group-item');
-        group.children[1].children[0].innerText = name_group;
-        group.children[1].children[0].addEventListener('dblclick', replaceByInput);
-
-        dropdown.setAttribute('class', 'dropdown dropend px-2');
-        dropdown.append(document.createElement('button'));
-        dropdown.append(document.createElement('div'));
-
-        dropdown.children[0].setAttribute('type', 'button');
-        dropdown.children[0].setAttribute('id', 'dropdownMenuLink');
-        dropdown.children[0].setAttribute('data-bs-toggle', 'dropdown');
-        dropdown.children[0].setAttribute('class', 'h-100 btn btn-danger rm-question');
-        dropdown.children[0].append(document.createElement('i'));
-        dropdown.children[0].children[0].setAttribute('class', 'bi bi-dash-circle-fill');
-
-        dropdown.children[1].setAttribute('class', 'dropdown-menu px-3');
-        dropdown.children[1].setAttribute('id', 'dropdownMenuLink');
-        
-        dropdown.children[1].append(document.createElement('p'));
-        dropdown.children[1].append(document.createElement('button'));
-        dropdown.children[1].append(document.createElement('button'));
-
-        dropdown.children[1].children[0].setAttribute('class', 'text-center');
-        dropdown.children[1].children[0].innerText = 'Vous êtes sur le point de supprimer ce groupe. Les informations relatives aux étudiants seront conservées. Êtes-vous sûr ?';
-
-        dropdown.children[1].children[1].setAttribute('id', data.id);
-        dropdown.children[1].children[1].setAttribute('type', 'button');
-        dropdown.children[1].children[1].setAttribute('class', 'btn btn-primary mx-1 rm-group');
-        dropdown.children[1].children[1].addEventListener('click', deleteGroup);
-        dropdown.children[1].children[1].innerText = 'Oui';
-
-        dropdown.children[1].children[2].setAttribute('type', 'button');
-        dropdown.children[1].children[2].setAttribute('class', 'btn btn-danger mx-1');
-        dropdown.children[1].children[2].innerText = 'Non';
-
-        document.querySelector('.list-group').append(toAppend);
+        document.querySelector('.groups').append(createGroupEntry(data.id, name_group));
     })
     .catch(error => {
+        console.log(error);
         error.then(error => {
             createAlert(error.message);
         });
@@ -207,10 +157,223 @@ function createAlert(text) {
     document.querySelector('.alert').append(mainDiv);
 }
 
+function createGroupEntry(id, name) {
+    let toAppend = document.createElement('div');
+    toAppend.setAttribute('class', 'container d-flex mb-2');
+
+    const group = document.createElement('div');
+
+    group.setAttribute('class', 'd-flex list-group-item w-100');
+    group.setAttribute('data-id', id);
+    group.append(document.createElement('div'));
+    group.append(document.createElement('div'));
+
+    group.children[0].innerText = '#' + id + '.';
+
+    group.children[1].setAttribute('id', id);
+    group.children[1].setAttribute('class', 'mx-1');
+
+    group.children[1].append(document.createElement('div'));
+    group.children[1].children[0].setAttribute('class', 'group-item');
+    group.children[1].children[0].innerText = name;
+    group.children[1].children[0].addEventListener('dblclick', replaceByInput);
+
+
+    const listbutton = document.createElement('button');
+
+    listbutton.setAttribute('type', 'button');
+    listbutton.setAttribute('class', 'btn btn-primary mx-1 group-info');
+    listbutton.setAttribute('data-id', id);
+    listbutton.addEventListener('click', readStudents);
+    listbutton.append(document.createElement('i'));
+    listbutton.firstElementChild.setAttribute('class', 'bi bi-list');
+
+
+    const dropdown = document.createElement('div');
+    
+    dropdown.setAttribute('class', 'dropdown dropend');
+    const dropdownbutton = document.createElement('button');
+    const dropdowndiv = document.createElement('div');
+    dropdown.append(dropdownbutton);
+    dropdown.append(dropdowndiv);
+
+    dropdownbutton.setAttribute('type', 'button');
+    dropdownbutton.setAttribute('id', 'dropdownMenuLink');
+    dropdownbutton.setAttribute('data-bs-toggle', 'dropdown');
+    dropdownbutton.setAttribute('class', 'h-100 btn btn-danger');
+    dropdownbutton.append(document.createElement('i'));
+    dropdownbutton.children[0].setAttribute('class', 'bi bi-dash-circle-fill');
+
+    dropdowndiv.setAttribute('class', 'dropdown-menu px-3');
+    dropdowndiv.setAttribute('id', 'dropdownMenuLink');
+    
+    dropdowndiv.append(document.createElement('p'));
+    dropdowndiv.append(document.createElement('button'));
+    dropdowndiv.append(document.createElement('button'));
+
+    dropdowndiv.children[0].setAttribute('class', 'text-center');
+    dropdowndiv.children[0].innerText = 'Vous êtes sur le point de supprimer ce groupe. Les informations relatives aux étudiants seront conservées. Êtes-vous sûr ?';
+
+    dropdowndiv.children[1].setAttribute('data-id', id);
+    dropdowndiv.children[1].setAttribute('type', 'button');
+    dropdowndiv.children[1].setAttribute('class', 'btn btn-primary mx-1 rm-group');
+    dropdowndiv.children[1].addEventListener('click', deleteGroup);
+    dropdowndiv.children[1].innerText = 'Oui';
+
+    dropdowndiv.children[2].setAttribute('type', 'button');
+    dropdowndiv.children[2].setAttribute('class', 'btn btn-danger mx-1');
+    dropdowndiv.children[2].innerText = 'Non';
+
+    toAppend.append(group);
+    toAppend.append(listbutton);
+    toAppend.append(dropdown);
+
+    return toAppend;
+}
+
+function readStudents() {
+    const groupId = this.getAttribute('data-id');
+    const myRequest = new Request(route('readstudents', groupId), {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .then(data => {
+        const studentsDiv = document.querySelector('.students');
+        studentsDiv.textContent = '';
+ 
+        for (const student of data)
+            studentsDiv.append(createStudentEntry(student.id, student.first_name, student.last_name));
+
+        document.querySelector('.add-student-button-dropdown').disabled = false;
+        document.querySelector('.add-student-button').setAttribute('data-id', groupId)
+    })
+}
+
+function createStudent() {
+    console.log(this.getAttribute('data-id'));
+    const myRequest = new Request(route('createstudent'), {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+
+        body: JSON.stringify({
+            group_id: this.getAttribute('data-id'),
+            first_name: document.querySelector('.student-firstname-input').value,
+            last_name: document.querySelector('.student-lastname-input').value,
+        })
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .then(data => {
+        document.querySelector('.students').append(createStudentEntry(data.id, data.first_name, data.last_name));
+    })
+    .catch(error => {
+        console.log(error);
+        error.then(error => {
+            createAlert(error.message);
+        });
+    });
+}
+
+function createStudentEntry(id, first_name, last_name) {
+    let toAppend = document.createElement('div');
+    toAppend.setAttribute('class', 'container d-flex mb-2');
+
+    const group = document.createElement('div');
+
+    group.setAttribute('class', 'd-flex list-group-item w-100');
+    group.setAttribute('data-id', id);
+    group.append(document.createElement('div'));
+    group.append(document.createElement('div'));
+
+    group.children[0].innerText = '#' + id + '.';
+
+    group.children[1].setAttribute('id', id);
+    group.children[1].setAttribute('class', 'mx-1');
+
+    group.children[1].append(document.createElement('div'));
+    group.children[1].children[0].setAttribute('class', 'group-item');
+    group.children[1].children[0].innerText = first_name + " " + last_name;
+
+    const editbutton = document.createElement('button');
+
+    editbutton.setAttribute('type', 'button');
+    editbutton.setAttribute('class', 'btn btn-primary mx-1');
+    editbutton.append(document.createElement('i'));
+    editbutton.firstElementChild.setAttribute('class', 'bi bi-pencil-fill');
+
+
+    const dropdown = document.createElement('div');
+    
+    dropdown.setAttribute('class', 'dropdown dropend');
+    const dropdownbutton = document.createElement('button');
+    const dropdowndiv = document.createElement('div');
+    dropdown.append(dropdownbutton);
+    dropdown.append(dropdowndiv);
+
+    dropdownbutton.setAttribute('type', 'button');
+    dropdownbutton.setAttribute('id', 'dropdownMenuLink');
+    dropdownbutton.setAttribute('data-bs-toggle', 'dropdown');
+    dropdownbutton.setAttribute('class', 'h-100 btn btn-danger');
+    dropdownbutton.append(document.createElement('i'));
+    dropdownbutton.children[0].setAttribute('class', 'bi bi-dash-circle-fill');
+
+    dropdowndiv.setAttribute('class', 'dropdown-menu px-3');
+    dropdowndiv.setAttribute('id', 'dropdownMenuLink');
+    
+    dropdowndiv.append(document.createElement('p'));
+    dropdowndiv.append(document.createElement('button'));
+    dropdowndiv.append(document.createElement('button'));
+
+    dropdowndiv.children[0].setAttribute('class', 'text-center');
+    dropdowndiv.children[0].innerText = 'Vous êtes sur le point de supprimer cet étudiant de la base de données. Êtes-vous sûr ?';
+
+    dropdowndiv.children[1].setAttribute('data-id', id);
+    dropdowndiv.children[1].setAttribute('type', 'button');
+    dropdowndiv.children[1].setAttribute('class', 'btn btn-primary mx-1 rm-group');
+    dropdowndiv.children[1].innerText = 'Oui';
+
+    dropdowndiv.children[2].setAttribute('type', 'button');
+    dropdowndiv.children[2].setAttribute('class', 'btn btn-danger mx-1');
+    dropdowndiv.children[2].innerText = 'Non';
+
+    toAppend.append(group);
+    toAppend.append(editbutton);document.querySelector('.student-firstname-input').value,
+    toAppend.append(dropdown);
+
+    return toAppend;
+}
+
 for (let item of document.getElementsByClassName('group-item'))
     item.addEventListener('dblclick', replaceByInput);
 
 for (let group of document.getElementsByClassName('rm-group'))
     group.addEventListener('click', deleteGroup);
 
+for (let group of document.getElementsByClassName('group-info'))
+    group.addEventListener('click', readStudents);
+
 document.querySelector('.add-group').addEventListener('click', createGroup);
+
+document.querySelector('.group-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') createGroup.call(document.querySelector('.add-group'));
+});
+
+document.querySelector('.add-student-button').addEventListener('click', createStudent);

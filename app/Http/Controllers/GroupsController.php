@@ -7,13 +7,18 @@ use App\Http\Requests\CreateGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Requests\DeleteGroupRequest;
 use App\Models\Group;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 
 class GroupsController extends Controller
 {
-    public function read(Request $request) {
-        return view('group.group', ['ret' => Group::all()]);
+    public function read() {
+        return Group::all();
+    }
+
+    public function menuView() {
+        return view('students.menu', ['groups' => Group::all()]);
     }
 
     public function create(CreateGroupRequest $request) {
@@ -75,6 +80,7 @@ class GroupsController extends Controller
 
         try {
             $a = Group::where('id', $request->id_group)->firstOrFail();
+            $b = Student::where('group_id', $a->id)->update(['group_id' => NULL]);
             $a->delete();
         } catch (ModelNotFoundException $err) {
             $returnData = array(

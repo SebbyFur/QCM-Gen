@@ -1,5 +1,5 @@
 function createQuestion() {
-    const myRequest = new Request(CREATE_QUESTION_ROUTE, {
+    const myRequest = new Request(route('createquestion'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -18,18 +18,16 @@ function createQuestion() {
         throw response.json();
     })
     .then(data => {
-        REDIRECT_QUESTION = (REDIRECT_QUESTION.slice(0, -1)) + data.id;
-        window.location.href = REDIRECT_QUESTION;
+        window.location.href = route('editquestion', data.id);
     })
     .catch(error => {
         error.then(error => {
             let add = createAlert(error.message);
-            if (error.id != undefined) {
-                REDIRECT_QUESTION = (REDIRECT_QUESTION.slice(0, -1)) + error.id;
+            if (error.id !== undefined) {
                 let button = document.createElement('a');
                 button.setAttribute('type', 'button');
                 button.setAttribute('class', 'btn btn-primary mx-2');
-                button.setAttribute('href', REDIRECT_QUESTION);
+                button.setAttribute('href', route('editquestion', error.id));
                 button.innerText = "S'y rendre";
                 add.children[1].append(button);
             }
@@ -41,7 +39,7 @@ function createQuestion() {
 }
 
 function deleteQuestion() {
-    const myRequest = new Request(DELETE_QAT_ROUTE, {
+    const myRequest = new Request(route('deleteqat'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",

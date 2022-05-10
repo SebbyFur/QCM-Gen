@@ -1,5 +1,7 @@
+const ID_QUESTION = document.querySelector("meta[name='id']").id;
+
 function updateQuestion() {
-    const myRequest = new Request(UPDATE_QUESTION_ROUTE, {
+    const myRequest = new Request(route('updatequestion'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -27,7 +29,7 @@ function updateQuestion() {
 }
 
 function deleteQuestion() {
-    const myRequest = new Request(DELETE_QAT_ROUTE, {
+    const myRequest = new Request(route('deleteqat'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -82,7 +84,7 @@ function createAlert(text) {
 }
 
 function createAnswer() {
-    const myRequest = new Request(CREATE_ANSWER_ROUTE, {
+    const myRequest = new Request(route('createanswer'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -148,7 +150,7 @@ function createAnswer() {
 }
 
 function deleteAnswer() {
-    const myRequest = new Request(DELETE_ANSWER_ROUTE, {
+    const myRequest = new Request(route('deleteanswer'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -189,7 +191,7 @@ function updateAnswer() {
         this.parentNode.children[0].disabled = false;
     }
 
-    const myRequest = new Request(UPDATE_ANSWER_ROUTE, {
+    const myRequest = new Request(route('updateanswer'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -218,7 +220,7 @@ function updateAnswer() {
 }
 
 function updateBelongingTag() {
-    const myRequest = new Request(this.checked ? CREATE_TAG_ROUTE : DELETE_TAG_ROUTE, {
+    const myRequest = new Request(this.checked ? route('createtag') : route('deletetag'), {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",

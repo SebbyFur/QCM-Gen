@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->integer('student_id')->unique();
-            $table->foreignId('id_group')->nullable()->references('id')->on('groups');
+            $table->string('first_name')->default('NOM');
+            $table->string('last_name')->default('Prénom');
+            $table->foreignId('group_id')->nullable()->default(NULL)->references('id')->on('groups');
             $table->timestamps();
         });
     }

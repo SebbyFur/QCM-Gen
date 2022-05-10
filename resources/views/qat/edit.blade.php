@@ -4,6 +4,10 @@
     Edition
 @endsection
 
+@section('metas')
+<meta name='id' id={{ $ret['question']['id'] }}>
+@endsection
+
 @section('content')
 <div class="container">
     <h1 class="text-center my-5"><strong>Edition de la question #{{ $ret['question']['id'] }}</strong></h1>
@@ -21,7 +25,7 @@
                         </div>
                         @foreach($ret['tags'] as $key => $value)
                             @if ($value['id_tag'] == $a['id'])
-                                <script>$('.checkboxes').last().prop('checked', true)</script>
+                                <script>Array.from(document.getElementsByClassName('checkboxes')).at(-1).checked = true</script>
                             @endif
                         @endforeach
                     @endforeach
@@ -58,22 +62,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    const ID_QUESTION = +"{{ $ret['question']['id'] }}";
-    const UPDATE_QUESTION_ROUTE = "{{ route('updatequestion') }}";
-    
-    const CREATE_ANSWER_ROUTE = "{{ route('createanswer') }}";
-    const UPDATE_ANSWER_ROUTE = "{{ route('updateanswer') }}";
-    const DELETE_ANSWER_ROUTE = "{{ route('deleteanswer') }}";
-
-    const CREATE_TAG_ROUTE = "{{ route('createtag') }}";
-    const DELETE_TAG_ROUTE = "{{ route('deletetag') }}";
-
-    const DELETE_QAT_ROUTE = "{{ route('deleteqat') }}"
-
-    const REDIRECT_HOME = "{{ route('qatmenu') }}";
-</script>
-
+@routes
 <script src="{{ asset('js/scripts/qat_edit.js') }}"></script>
 
 @endsection

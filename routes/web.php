@@ -6,6 +6,7 @@ use App\Http\Controllers\AnswersController;
 use App\Http\Controllers\QuestionsTagsController;
 use App\Http\Controllers\QATController;
 use App\Http\Controllers\GroupsController;
+use App\Http\Controllers\StudentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,17 +21,13 @@ use App\Http\Controllers\GroupsController;
 
 Route::get('/', function () {
     return view('welcome');
-})->name('/');
+})->name('welcome');
 
 Route::get('/question/{id}', [QATController::class, 'read'])->name('editquestion');
 
 Route::get('/questions/menu', [QATController::class, 'readAll'])->name('qatmenu');
 
-Route::get('/students/menu', function() {
-    return view('students.menu');
-})->name('studentsmenu');
-
-Route::get('/groups/menu', [GroupsController::class, 'read'])->name('groupsmenu');
+Route::get('/groups/menu', [GroupsController::class, 'menuView'])->name('groupsmenu');
 
 //Questions
 Route::controller(QuestionsController::class)->group(function () {
@@ -60,7 +57,14 @@ Route::controller(QATController::class)->group(function () {
 
 //Groups
 Route::controller(GroupsController::class)->group(function () {
+    Route::get('/get/group/read', 'read')->name("readgroup");
     Route::post('/post/group/create', 'create')->name("creategroup");
     Route::post('/post/group/update', 'update')->name("updategroup");
     Route::post('/post/group/delete', 'delete')->name("deletegroup");
+});
+
+//Students
+Route::controller(StudentsController::class)->group(function () {
+    Route::get('/get/students/read/{group_id}', 'readFromGroup')->name("readstudents");
+    Route::post('/post/student/create', 'create')->name("createstudent");
 });
