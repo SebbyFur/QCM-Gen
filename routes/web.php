@@ -67,4 +67,6 @@ Route::controller(GroupsController::class)->group(function () {
 Route::controller(StudentsController::class)->group(function () {
     Route::get('/get/students/read/{group_id}', 'readFromGroup')->name("readstudents");
     Route::post('/post/student/create', 'create')->name("createstudent");
+    Route::post('/post/student/update', 'update')->name("updatestudent");
+    Route::post('/post/student/delete', 'delete')->name("deletestudent");
 });

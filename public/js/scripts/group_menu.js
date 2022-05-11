@@ -24,11 +24,13 @@ function replaceByInput() {
 
 function replaceByDiv() {
     let text = this.value;
+    let id = this.getAttribute('data-id');
 
     let parent = this.parentNode;
     parent.textContent = '';
 
     let toAppend = document.createElement('div');
+    toAppend.setAttribute('data-id', id);
     toAppend.setAttribute('class', "group-item");
     toAppend.innerText = text;
     
@@ -56,7 +58,7 @@ function updateGroupName() {
         if (response.ok) return response.json()
 
         throw response.json();
-    })
+        qsdfghjklm    })
     .then(data => {
         replaceByDiv.call(this);
     })
@@ -70,8 +72,6 @@ function updateGroupName() {
 }
 
 function deleteGroup() {
-    console.log(this);
-    console.log(this.getAttribute('data-id'));
     const myRequest = new Request(route('deletegroup'), {
         method: 'POST',
         headers: {
@@ -92,7 +92,12 @@ function deleteGroup() {
     })
     .then(data => {
         this.parentNode.parentNode.parentNode.remove();
-        document.querySelector('.students').textContent = '';
+        if (this.getAttribute('data-id') === document.querySelector('.add-student-button').getAttribute('data-id')) {
+            const studentsDiv = document.querySelector('.students');
+            studentsDiv.textContent = '';
+            document.querySelector('.add-student-button-dropdown').disabled = true;
+            canEditStudent(false);
+        }
     })
     .catch(error => {
         error.then(error => {
@@ -123,10 +128,9 @@ function createGroup() {
         throw response.json();
     })
     .then(data => {
-        document.querySelector('.groups').append(createGroupEntry(data.id, name_group));
+        document.querySelector('.groups').firstElementChild.append(createGroupEntry(data.id, name_group));
     })
     .catch(error => {
-        console.log(error);
         error.then(error => {
             createAlert(error.message);
         });
@@ -250,17 +254,35 @@ function readStudents() {
     .then(data => {
         const studentsDiv = document.querySelector('.students');
         studentsDiv.textContent = '';
+
+        if (groupId !== studentsDiv.getAttribute('data-id'))
+            canEditStudent(false);
  
         for (const student of data)
             studentsDiv.append(createStudentEntry(student.id, student.first_name, student.last_name));
 
+        if (data.length == 0) {
+            studentsDiv.setAttribute('empty', 'true');
+            studentsDiv.append(createEmptyDiv());
+        } else {
+            studentsDiv.setAttribute('empty', 'false');
+        }
+
+        studentsDiv.setAttribute('data-id', groupId);
         document.querySelector('.add-student-button-dropdown').disabled = false;
         document.querySelector('.add-student-button').setAttribute('data-id', groupId)
     })
 }
 
+function createEmptyDiv() {
+    const div = document.createElement('h1');
+    div.setAttribute('class', 'text-center text-secondary my-5');
+    div.innerText = "(vide)";
+
+    return div;
+}
+
 function createStudent() {
-    console.log(this.getAttribute('data-id'));
     const myRequest = new Request(route('createstudent'), {
         method: 'POST',
         headers: {
@@ -270,8 +292,8 @@ function createStudent() {
 
         body: JSON.stringify({
             group_id: this.getAttribute('data-id'),
-            first_name: document.querySelector('.student-firstname-input').value,
-            last_name: document.querySelector('.student-lastname-input').value,
+            first_name: document.querySelector('.create-student-first-name-input').value,
+            last_name: document.querySelector('.create-student-last-name-input').value,
         })
     });
 
@@ -282,10 +304,17 @@ function createStudent() {
         throw response.json();
     })
     .then(data => {
-        document.querySelector('.students').append(createStudentEntry(data.id, data.first_name, data.last_name));
+        const studentsDiv = document.querySelector('.students');
+        if (studentsDiv.getAttribute('empty') === 'true') {
+            studentsDiv.textContent = '';
+            studentsDiv.removeAttribute('empty');
+        }
+    
+        document.querySelector('.create-student-first-name-input').value = '';
+        document.querySelector('.create-student-last-name-input').value = '';
+        studentsDiv.append(createStudentEntry(data.id, data.first_name, data.last_name));
     })
     .catch(error => {
-        console.log(error);
         error.then(error => {
             createAlert(error.message);
         });
@@ -305,17 +334,23 @@ function createStudentEntry(id, first_name, last_name) {
 
     group.children[0].innerText = '#' + id + '.';
 
-    group.children[1].setAttribute('id', id);
     group.children[1].setAttribute('class', 'mx-1');
 
     group.children[1].append(document.createElement('div'));
-    group.children[1].children[0].setAttribute('class', 'group-item');
-    group.children[1].children[0].innerText = first_name + " " + last_name;
+    group.children[1].children[0].setAttribute('class', 'group-item d-flex');
+    group.children[1].children[0].append(document.createElement('div'));
+    group.children[1].children[0].append(document.createElement('div'));
+    group.children[1].children[0].children[0].setAttribute('class', 'first-name-div-' + id);
+    group.children[1].children[0].children[0].innerText = first_name;
+    group.children[1].children[0].children[1].setAttribute('class', 'last-name-div-' + id + ' ms-1');
+    group.children[1].children[0].children[1].innerText = last_name;
 
     const editbutton = document.createElement('button');
 
     editbutton.setAttribute('type', 'button');
-    editbutton.setAttribute('class', 'btn btn-primary mx-1');
+    editbutton.setAttribute('class', 'btn btn-primary mx-1 edit-student-button');
+    editbutton.setAttribute('data-id', id);
+    editbutton.addEventListener('click', () => {canEditStudent(true, id, first_name, last_name)});
     editbutton.append(document.createElement('i'));
     editbutton.firstElementChild.setAttribute('class', 'bi bi-pencil-fill');
 
@@ -348,6 +383,7 @@ function createStudentEntry(id, first_name, last_name) {
     dropdowndiv.children[1].setAttribute('data-id', id);
     dropdowndiv.children[1].setAttribute('type', 'button');
     dropdowndiv.children[1].setAttribute('class', 'btn btn-primary mx-1 rm-group');
+    dropdowndiv.children[1].addEventListener('click', deleteStudent);
     dropdowndiv.children[1].innerText = 'Oui';
 
     dropdowndiv.children[2].setAttribute('type', 'button');
@@ -355,10 +391,104 @@ function createStudentEntry(id, first_name, last_name) {
     dropdowndiv.children[2].innerText = 'Non';
 
     toAppend.append(group);
-    toAppend.append(editbutton);document.querySelector('.student-firstname-input').value,
+    toAppend.append(editbutton);
     toAppend.append(dropdown);
 
     return toAppend;
+}
+
+function deleteStudent() {
+    const myRequest = new Request(route('deletestudent'), {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+
+        body: JSON.stringify({
+            student_id: this.getAttribute('data-id')
+        })
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .then(data => {
+        this.parentNode.parentNode.parentNode.remove();
+
+        const studentsDiv = document.querySelector('.students');
+        if (studentsDiv.childNodes.length == 0) {
+            studentsDiv.setAttribute('empty', 'true');
+            studentsDiv.append(createEmptyDiv());
+        }
+
+        if (this.getAttribute('data-id') === document.querySelector('.student').getAttribute('data-id'))
+            canEditStudent(false);
+    })
+    .catch(error => {
+        error.then(error => {
+            createAlert(error.message);
+        });
+    });
+}
+
+function canEditStudent(bool, id, first_name, last_name) {
+    const editStudentFirstName = document.querySelector('.edit-student-first-name-input');
+    const editStudentLastName = document.querySelector('.edit-student-last-name-input');
+
+    editStudentFirstName.hidden = bool ? false : true
+    editStudentLastName.hidden = bool ? false : true;
+    document.querySelector('.change-group-button').disabled = bool ? false : true;
+
+    if (bool) {
+        editStudentFirstName.value = first_name;
+        editStudentFirstName.setAttribute('data-id', id);
+        editStudentLastName.value = last_name;
+        editStudentLastName.setAttribute('data-id', id);
+        document.querySelector('.student').setAttribute('data-id', id);
+    } else {
+        editStudentFirstName.value = '';
+        editStudentFirstName.removeAttribute('data-id');
+        editStudentLastName.value = '';
+        editStudentLastName.removeAttribute('data-id');
+        document.querySelector('.student').removeAttribute('data-id');
+    }
+}
+
+function updateStudent() {
+    const id = this.getAttribute('data-id');
+    const myRequest = new Request(route('updatestudent'), {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+
+        body: JSON.stringify({
+            student_id: id,
+            first_name: document.querySelector('.edit-student-first-name-input').value,
+            last_name: document.querySelector('.edit-student-last-name-input').value,
+        })
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .then(data => {
+        document.querySelector('.first-name-div-' + id).innerText = document.querySelector('.edit-student-first-name-input').value;
+        document.querySelector('.last-name-div-' + id).innerText = document.querySelector('.edit-student-last-name-input').value;
+    })
+    .catch(error => {
+        error.then(error => {
+            createAlert(error.message);
+        });
+    });
 }
 
 for (let item of document.getElementsByClassName('group-item'))
@@ -377,3 +507,6 @@ document.querySelector('.group-input').addEventListener('keypress', function(eve
 });
 
 document.querySelector('.add-student-button').addEventListener('click', createStudent);
+
+document.querySelector('.edit-student-first-name-input').addEventListener('blur', updateStudent);
+document.querySelector('.edit-student-last-name-input').addEventListener('blur', updateStudent);
