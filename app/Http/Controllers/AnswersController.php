@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\QuestionsAnswers;
 use App\Models\Answer;
+use App\Models\AnswerList;
 use App\Http\Requests\CreateAnswerRequest;
 use App\Http\Requests\DeleteAnswerRequest;
 use App\Http\Requests\UpdateAnswerRequest;
@@ -20,7 +21,11 @@ class AnswersController extends Controller
             $a = Answer::create(['id_question' => $request->id_question, 'answer' => $request->answer]);
             $a->save();
         } catch (QueryException $err) {
-            return ['false', -1];
+            return response()->json(
+            array(
+                'status' => 'error',
+                'message' => 'Erreur lors de la création de la réponse !',
+            ), 500);
         }
         
         return response()->json(

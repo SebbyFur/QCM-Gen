@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('questions', function (Blueprint $table) {
+        Schema::create('mcq_structure', function (Blueprint $table) {
             $table->id();
-            $table->string('question')->unique();
+            $table->foreignId('id_question')->references('id')->on('questions');
+            $table->foreignId('id_answer')->references('id')->on('answers');
+            $table->foreignId('id_mcq')->references('id')->on('mcq_generator');
+            $table->integer('choice')->unsigned()->nullable();
         });
     }
 
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('questions');
+        Schema::dropIfExists('mcq_structure');
     }
 };

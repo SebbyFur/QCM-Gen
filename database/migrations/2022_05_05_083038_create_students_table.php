@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('first_name')->default('NOM');
             $table->string('last_name')->default('Prénom');
             $table->foreignId('group_id')->nullable()->default(NULL)->references('id')->on('groups');
-            $table->timestamps();
         });
     }
 
