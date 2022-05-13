@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_question')->references('id')->on('questions');
             $table->foreignId('id_tag')->references('id')->on('tags');
+            $table->timestamps();
         });
     }
 

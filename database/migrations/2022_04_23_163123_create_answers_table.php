@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('id_question')->references('id')->on('questions');
             $table->string('answer')->nullable();
             $table->boolean('is_correct')->default(false);
+            $table->timestamps();
         });
     }
 

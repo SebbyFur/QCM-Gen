@@ -20,15 +20,15 @@ class QuestionsController extends Controller
             $a = Question::create(['question' => $request['question']]);
             $a->save();
         } catch (QueryException $err) {
+            return $err;
             $id = Question::where(['question' => $request['question']])->first()->id;
 
-            $returnData = array(
+            return response()->json(
+            array(
                 'status' => 'error',
                 'id' => $id,
                 'message' => "Une question avec cet intitulé existe déjà. #$id"
-            );
-
-            return response()->json($returnData, 422);
+            ), 500);
         }
 
         return response()->json(
@@ -42,28 +42,29 @@ class QuestionsController extends Controller
         $request->validated();
 
         try {
-            if (preg_replace("/\s+/", "", $request->question) == "")
-                throw new InvalidArgumentException("O");
-
             $a = Question::where('id', $request->id)->firstOrFail();
             $a->update(['question' => $request->question]);
         } catch (ModelNotFoundException $err) {
-            return 'false';
-        } catch (InvalidArgumentException $err) {
-            return 'false';
+            return response()->json(
+            array(
+                'status' => 'error',
+                'message' => "Cette question n'existe pas."
+            ), 500);
         } catch (QueryException $err) {
             $id = Question::where(['question' => $request['question']])->first()->id;
 
-            $returnData = array(
+            return response()->json(
+            array(
                 'status' => 'error',
                 'id' => $id,
                 'message' => "Une question avec cet intitulé existe déjà. #$id"
-            );
-
-            return response()->json($returnData, 500);
+            ), 500);
         }
         
-        return 'true';
+        return response()->json(
+        array(
+            'status' => 'success',
+        ), 200);
     }
 
     public function fuzzysearch(FuzzySearchQuestionRequest $request) {

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('mcq_generator', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->timestamps();
         });
     }
 

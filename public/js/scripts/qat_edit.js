@@ -50,7 +50,7 @@ function deleteQuestion() {
     })
     .then(data => {
         console.log(data);
-        window.location.href = REDIRECT_HOME;
+        window.location.href = route('qatmenu');
     })
     .catch(error => {
         error.then(error => {
