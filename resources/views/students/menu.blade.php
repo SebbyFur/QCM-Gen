@@ -21,7 +21,7 @@
                                     <div data-id='{{ $group->id }}' class='group-item'>{{ $group->name_group }}</div>
                                 </div>
                             </div>
-                            <button data-id='{{ $group->id }}' type='button' class='btn btn-primary mx-1 group-info'><i class="bi bi-list"></i></button>
+                            <button data-id='{{ $group->id }}' type='button' class='btn btn-outline-primary mx-1 group-info'><i class="bi bi-list"></i></button>
                             <div class='dropdown dropend'>
                                 <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='h-100 btn btn-danger'><i class="bi bi-dash-circle-fill"></i></button>
                                 <div class='dropdown-menu px-3' aria-labelledby="dropdownMenuLink">
@@ -39,7 +39,7 @@
                                 <div data-id='NONE' class='group-item'>Autre</div>
                             </div>
                         </div>
-                        <button data-id='NONE' type='button' class='btn btn-primary ms-1 group-info'><i class="bi bi-list"></i></button>
+                        <button data-id='NONE' type='button' class='btn btn-outline-primary ms-1 group-info'><i class="bi bi-list"></i></button>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center my-2">

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\AnswersController;
 use App\Http\Controllers\QuestionsTagsController;
+use App\Http\Controllers\MCQGeneratorController;
 use App\Http\Controllers\QATController;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\StudentsController;
@@ -23,9 +24,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/questions/menu', [QATController::class, 'readAll'])->name('qatmenu');
 Route::get('/question/{id}', [QATController::class, 'read'])->name('editquestion');
 
-Route::get('/questions/menu', [QATController::class, 'readAll'])->name('qatmenu');
+Route::get('/mcqs/menu', [MCQGeneratorController::class, 'menuView'])->name('mcqmenu');
+Route::get('/mcq/{id}', [MCQGeneratorController::class, 'read'])->name('editmcq');
 
 Route::get('/groups/menu', [GroupsController::class, 'menuView'])->name('groupsmenu');
 
@@ -69,4 +72,10 @@ Route::controller(StudentsController::class)->group(function () {
     Route::post('/post/student/create', 'create')->name("createstudent");
     Route::post('/post/student/update', 'update')->name("updatestudent");
     Route::post('/post/student/delete', 'delete')->name("deletestudent");
+});
+
+//MCQGenerator
+Route::controller(MCQGeneratorController::class)->group(function () {
+    Route::post('/post/mcqgenerator/create', 'create')->name("createmcqgenerator");
+    Route::post('/post/mcqgenerator/delete', 'delete')->name("deletemcqgenerator");
 });

@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MCQStructure extends Model
+class MCQGenerator extends Model
 {
     use HasFactory;
 
-    protected $table = 'mcqstructure';
+    protected $table = 'mcq_generator';
 
     protected $fillable = [
-        'id_answer',
-        'id_question',
-        'id_mcq',
-        'choice',
+        'title',
     ];
 }

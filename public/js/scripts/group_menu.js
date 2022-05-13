@@ -186,7 +186,7 @@ function createGroupEntry(id, name) {
     const listbutton = document.createElement('button');
 
     listbutton.setAttribute('type', 'button');
-    listbutton.setAttribute('class', 'btn btn-primary mx-1 group-info');
+    listbutton.setAttribute('class', 'btn btn-outline-primary mx-1 group-info');
     listbutton.setAttribute('data-id', id);
     listbutton.addEventListener('click', readStudents);
     listbutton.append(document.createElement('i'));
@@ -348,7 +348,7 @@ function createStudentEntry(id, first_name, last_name) {
     const editbutton = document.createElement('button');
 
     editbutton.setAttribute('type', 'button');
-    editbutton.setAttribute('class', 'btn btn-primary mx-1 edit-student-button');
+    editbutton.setAttribute('class', 'btn btn-outline-primary mx-1 edit-student-button');
     editbutton.setAttribute('data-id', id);
     editbutton.addEventListener('click', () => {canEditStudent(true, id, first_name, last_name)});
     editbutton.append(document.createElement('i'));
