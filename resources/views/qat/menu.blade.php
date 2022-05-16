@@ -27,7 +27,14 @@
         </div>
         @endforeach
     </div>
+    {{ $ret->links() }}
 </div>
+
+<style>
+    .w-5 {
+        display: none;
+    }
+</style>
 
 @routes
 <script src="{{ asset('js/scripts/qat_menu.js') }}"></script>

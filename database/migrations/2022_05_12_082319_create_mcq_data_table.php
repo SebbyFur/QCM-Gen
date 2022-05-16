@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_question')->references('id')->on('questions');
             $table->foreignId('id_answer')->references('id')->on('answers');
-            $table->foreignId('id_mcq')->references('id')->on('mcq_generated');
+            $table->foreignId('id_mcq')->references('id')->on('mcq');
             $table->integer('choice')->unsigned()->nullable();
             $table->timestamps();
         });

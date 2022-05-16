@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mcq_generator', function (Blueprint $table) {
+        Schema::create('mcq_model', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->timestamps();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mcq_generator');
+        Schema::dropIfExists('mcq_model');
     }
 };

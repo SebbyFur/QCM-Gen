@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\MCQGenerator;
-use App\Http\Requests\CreateMCQGeneratorRequest;
-use App\Http\Requests\DeleteMCQGeneratorRequest;
+use App\Models\MCQModel;
+use App\Http\Requests\CreateMCQModelRequest;
+use App\Http\Requests\DeleteMCQModelRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class MCQGeneratorController extends Controller
+class MCQModelController extends Controller
 {
-    public function create(CreateMCQGeneratorRequest $request) {
+    public function create(CreateMCQModelRequest $request) {
         $request->validated();
         
-        $a = MCQGenerator::create(['title' => $request['title']]);
+        $a = MCQModel::create(['title' => $request['title']]);
         $a->save();
 
         return response()->json(
@@ -23,11 +23,11 @@ class MCQGeneratorController extends Controller
         ), 200);
     }
 
-    public function delete(DeleteMCQGeneratorRequest $request) {
+    public function delete(DeleteMCQModelRequest $request) {
         $request->validated();
 
         try {
-            $mcq = MCQGenerator::findOrFail($request->id);
+            $mcq = MCQModel::findOrFail($request->id);
             $mcq->delete();
         } catch (ModelNotFoundException $err) {
             return response()->json(
@@ -44,12 +44,12 @@ class MCQGeneratorController extends Controller
     }
 
     public function read(Request $request) {
-        return view('mcq.edit', ['mcq' => MCQGenerator::findOrFail($request->id)]);
+        return view('model.edit', ['model' => MCQModel::findOrFail($request->id)]);
     }
 
     public function menuView(Request $request) {
-        $mcqs = MCQGenerator::all();
+        $models = MCQModel::all();
 
-        return view('mcq.menu', ['mcqs' => $mcqs]);
+        return view('model.menu', ['models' => $models]);
     }
 }

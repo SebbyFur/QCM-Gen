@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MCQGenerator extends Model
+class MCQModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'mcq_generator';
+    protected $table = 'mcq_model';
 
     protected $fillable = [
         'title',

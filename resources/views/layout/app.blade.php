@@ -21,7 +21,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <a class="nav-link" href="{{ route('mcqmenu') }}">QCMs</a>
+                    <a class="nav-link">QCMs</a>
+                    <a class="nav-link" href="{{ route('modelmenu') }}">Modèles</a>
                     <a class="nav-link" href="{{ route('qatmenu') }}">Questions</a>
                     <a class="nav-link" href="{{ route('groupsmenu') }}">Groupes et étudiants</a>
                 </ul>
@@ -34,8 +35,6 @@
 
     @yield('content')
 
-    <div class="fixed-bottom w-100" role="alert">
-        <div class="d-flex justify-content-center alert"></div>
-    </div>
+    <div class="fixed-bottom d-flex justify-content-center w-100 alert" style='pointer-events: none'></div>
 </body>
 </html>

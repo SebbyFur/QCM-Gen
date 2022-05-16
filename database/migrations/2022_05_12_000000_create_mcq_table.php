@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mcq_structure', function (Blueprint $table) {
+        Schema::create('mcq', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_question')->references('id')->on('questions');
-            $table->foreignId('id_answer')->references('id')->on('answers');
-            $table->foreignId('id_mcq')->references('id')->on('mcq_generator');
+            $table->string('title');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mcq_structure');
+        Schema::dropIfExists('mcq');
     }
 };

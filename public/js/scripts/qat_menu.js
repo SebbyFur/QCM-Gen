@@ -32,8 +32,10 @@ function createQuestion() {
                 add.children[1].append(button);
             }
 
-            document.querySelector('.alert').textContent = '';
-            document.querySelector('.alert').append(add);
+            const alert = document.querySelector('.alert');
+
+            alert.textContent = '';
+            alert.append(add);
         });
     });
 }
@@ -63,8 +65,9 @@ function deleteQuestion() {
     })
     .catch(error => {
         error.then(error => {
-            document.querySelector('.alert').textContent = '';
-            document.querySelector('.alert').append(createAlert(error.message));
+            const alert = document.querySelector('.alert');
+            alert.textContent = '';
+            alert.append(createAlert(error.message));
         });
     });
 }
@@ -72,6 +75,7 @@ function deleteQuestion() {
 function createAlert(text) {
     let mainDiv = document.createElement('div');
     mainDiv.setAttribute('class', "border border-4 alert alert-danger alert-dismissible fade show w-50 d-flex align-items-center");
+    mainDiv.style.pointerEvents = 'auto';
 
     let img = document.createElement('i');
     img.setAttribute('class', 'bi bi-exclamation-triangle-fill flex-shrink-0 me-2');

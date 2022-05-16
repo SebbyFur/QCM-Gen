@@ -34,7 +34,7 @@ class QATController extends Controller
     }
 
     public function readAll() {
-        return view('qat.menu', ['ret' => Question::all()]);
+        return view('qat.menu', ['ret' => Question::paginate(15)]);
     }
 
     public function delete(DeleteQATRequest $request) {

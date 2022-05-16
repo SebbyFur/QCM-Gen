@@ -22,8 +22,9 @@ function updateQuestion() {
     })
     .catch(error => {
         error.then(error => {
-            document.querySelector('.alert').textContent = '';
-            document.querySelector('.alert').append(createAlert(error.message));
+            const alert = document.querySelector('.alert');
+            alert.textContent = '';
+            alert.append(createAlert(error.message));
         });
     });
 }

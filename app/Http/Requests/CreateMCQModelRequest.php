@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMCQGeneratorRequest extends FormRequest
+class CreateMCQModelRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,22 +24,19 @@ class UpdateMCQGeneratorRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required'],
-            'id' => ['required']
+            'title' => ['required']
         ];
     }
 
     public function messages() {
         return [
-            'title.required' => "Le QCM doit avoir un nom !",
-            'id.required' => "Il faut donner un identifiant de QCM dans la requête !"
+            'title.required' => "Le champ titre ne peut pas être vide !",
         ];
     }
 
     public function attributes() {
         return [
             'title' => 'title',
-            'id' => 'id'
         ];
     }
 }
