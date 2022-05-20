@@ -17,7 +17,8 @@ class QuestionFactory extends Factory
     public function definition()
     {
         return [
-            'question' => $this->faker->sentence(8, true) . ' ?'
+            'question' => $this->faker->sentence(8, true) . ' ?',
+            'is_valid' => false
         ];
     }
 }

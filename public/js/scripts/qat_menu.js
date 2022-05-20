@@ -7,7 +7,7 @@ function createQuestion() {
         },
 
         body: JSON.stringify({
-            question: this.previousElementSibling.value
+            question: document.querySelector('.question-input').value
         })
     });
 
@@ -101,3 +101,5 @@ for (let create of document.getElementsByClassName('add-question'))
 
 for (let del of document.getElementsByClassName('rm-question'))
     del.addEventListener('click', deleteQuestion);
+
+new SearchBar(document.querySelector('.question-input'), document.querySelector('.search-data'));

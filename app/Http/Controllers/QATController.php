@@ -20,8 +20,7 @@ class QATController extends Controller
 {
     public function read(Request $request) {
         $ret = [
-            'question' => Question::findOrFail($request->id)
-            ->makeHidden(['created_at', 'updated_at']),
+            'question' => Question::findOrFail($request->id),
             'answers'  => Answer::where('id_question', $request->id)->get()
             ->makeHidden(['created_at', 'updated_at', 'id_question', 'id_answer']),
             'tags'     => Tags::join('questions_tags', function($join) {
@@ -31,10 +30,6 @@ class QATController extends Controller
         ];
 
         return view('qat.edit', ['ret' => $ret]);
-    }
-
-    public function readAll() {
-        return view('qat.menu', ['ret' => Question::paginate(15)]);
     }
 
     public function delete(DeleteQATRequest $request) {

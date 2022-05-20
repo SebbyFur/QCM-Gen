@@ -18,10 +18,12 @@ class QATSeeder extends Seeder
      */
     public function run()
     {
-        $questions = Question::factory()->count(250)->create();
+        $questions = Question::factory()->count(100)->create();
 
         foreach ($questions as $question) {
             Answer::factory()->count(10)->create(['id_question' => $question->id]);
+            $question->update(['is_valid' => $question->isValid()]);
+
             $duplicates = QuestionsTags::factory()->count(3)->create(['id_question' => $question->id]);
 
             //Hackfix pour supprimer les duplicatas... Ce n'est certainement pas la meilleure solution, mais j'en ai marre

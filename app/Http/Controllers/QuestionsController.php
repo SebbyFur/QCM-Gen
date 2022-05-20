@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Question;
+use App\Models\MCQModelData;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CreateQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
@@ -20,7 +21,6 @@ class QuestionsController extends Controller
             $a = Question::create(['question' => $request['question']]);
             $a->save();
         } catch (QueryException $err) {
-            return $err;
             $id = Question::where(['question' => $request['question']])->first()->id;
 
             return response()->json(
@@ -36,6 +36,23 @@ class QuestionsController extends Controller
             'status' => 'success',
             'id' => $a->id,
         ), 200);
+    }
+
+    public function readAllView() {
+        return view('qat.menu', ['ret' => Question::paginate(15)]);
+    }
+
+    public function readAll() {
+        return Question::paginate(15);
+    }
+
+    public function readOuterJoin(Request $request) {
+        return MCQModelData::rightJoin('questions', function($join) use (&$request) {
+            $join->on('questions.id', '=', 'mcq_model_data.id_question');
+            $join->where('mcq_model_data.id_model', $request->id);
+        })
+        ->where(['id_question' => NULL])
+        ->paginate(15);
     }
 
     public function update(UpdateQuestionRequest $request) {
@@ -67,12 +84,14 @@ class QuestionsController extends Controller
         ), 200);
     }
 
-    public function fuzzysearch(FuzzySearchQuestionRequest $request) {
-        $request->validated();
+    public function fuzzysearch(Request $request) {
+        if ($request->content == '')
+            return Question::all()->take(15);
 
-        return Question::whereFuzzy('question', $request->field)
+        return Question::whereFuzzy('question', $request->content)
         ->get()
-        ->makeHidden(['created_at', 'updated_at', 'fuzzy_relevance_question'])
+        ->makeHidden(['fuzzy_relevance_question', '_fuzzy_relevance_'])
+        ->take(15)
         ->toJson(JSON_PRETTY_PRINT);
     }
 }

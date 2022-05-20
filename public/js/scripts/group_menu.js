@@ -140,6 +140,7 @@ function createGroup() {
 function createAlert(text) {
     let mainDiv = document.createElement('div');
     mainDiv.setAttribute('class', "border border-4 alert alert-danger alert-dismissible fade show w-50 d-flex");
+    mainDiv.style.pointerEvents = 'auto';
 
     let img = document.createElement('i');
     img.setAttribute('class', 'bi bi-exclamation-triangle-fill flex-shrink-0 me-2');

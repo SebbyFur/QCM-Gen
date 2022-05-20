@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\QuestionsAnswers;
 use App\Models\Answer;
+use App\Models\Question;
 use App\Models\AnswerList;
 use App\Http\Requests\CreateAnswerRequest;
 use App\Http\Requests\DeleteAnswerRequest;
@@ -20,6 +21,9 @@ class AnswersController extends Controller
         try {
             $a = Answer::create(['id_question' => $request->id_question, 'answer' => $request->answer]);
             $a->save();
+
+            $b = Question::find($request->id_question);
+            $b->update(['is_valid' => $b->isValid()]);
         } catch (QueryException $err) {
             return response()->json(
             array(
@@ -57,6 +61,9 @@ class AnswersController extends Controller
 
             if (!isset($answer->answer))
                 $answer->update(['is_correct' => 0]);
+
+            $b = Question::find($answer->id_question);
+            $b->update(['is_valid' => $b->isValid()]);
         } catch (ModelNotFoundException $err) {
             return 'false';
         }

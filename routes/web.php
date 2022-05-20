@@ -5,6 +5,8 @@ use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\AnswersController;
 use App\Http\Controllers\QuestionsTagsController;
 use App\Http\Controllers\MCQModelController;
+use App\Http\Controllers\MCQModelDataController;
+use App\Http\Controllers\MCQController;
 use App\Http\Controllers\QATController;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\StudentsController;
@@ -24,19 +26,14 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::get('/questions/menu', [QATController::class, 'readAll'])->name('qatmenu');
-Route::get('/question/{id}', [QATController::class, 'read'])->name('editquestion');
-
-Route::get('/models/menu', [MCQModelController::class, 'menuView'])->name('modelmenu');
-Route::get('/model/{id}', [MCQModelController::class, 'read'])->name('editmodel');
-
-Route::get('/groups/menu', [GroupsController::class, 'menuView'])->name('groupsmenu');
-
 //Questions
 Route::controller(QuestionsController::class)->group(function () {
+    Route::get('/questions/menu', 'readAllView')->name('qatmenu');
+    Route::get('/questions', 'readAll')->name('qatall');
+    Route::get('/questions', 'readOuterJoin')->name('qatouterjoin');
     Route::post('/post/question/create', 'create')->name("createquestion");
     Route::post('/post/question/update', 'update')->name("updatequestion");
-    Route::post('/post/question/fuzzysearch', 'fuzzysearch')->name("fuzzysearchquestion");
+    Route::get('/post/question/fuzzysearch', 'fuzzysearch')->name("fuzzysearchquestion");
 });
 
 //Answers
@@ -54,13 +51,14 @@ Route::controller(QuestionsTagsController::class)->group(function () {
 
 //QAT
 Route::controller(QATController::class)->group(function () {
-    Route::post('/post/qat/read', 'read')->name("readqat");
+    Route::get('/question/{id}', 'read')->name('editquestion');
     Route::post('/post/qat/delete', 'delete')->name("deleteqat");
 });
 
 //Groups
 Route::controller(GroupsController::class)->group(function () {
     Route::get('/get/group/read', 'read')->name("readgroup");
+    Route::get('/groups/menu', 'menuView')->name('groupsmenu');
     Route::post('/post/group/create', 'create')->name("creategroup");
     Route::post('/post/group/update', 'update')->name("updategroup");
     Route::post('/post/group/delete', 'delete')->name("deletegroup");
@@ -76,6 +74,20 @@ Route::controller(StudentsController::class)->group(function () {
 
 //MCQModel
 Route::controller(MCQModelController::class)->group(function () {
+    Route::get('/models/menu', 'menuView')->name('modelmenu');
+    Route::get('/model/{id}', 'readView')->name('editmodel');
     Route::post('/post/model/create', 'create')->name("createmcqmodel");
     Route::post('/post/model/delete', 'delete')->name("deletemcqmodel");
+});
+
+//MCQModelData
+Route::controller(MCQModelDataController::class)->group(function () {
+    Route::post('/post/modeldata/create', 'create')->name("createmcqmodeldata");
+    Route::post('/post/modeldata/delete', 'delete')->name("deletemcqmodeldata");
+});
+
+//MCQ
+Route::controller(MCQController::class)->group(function () {
+    Route::get('/mcqs/menu', 'menuView')->name('mcqmenu');
+    Route::get('/mcq/create', 'createView')->name('mcqcreate');
 });

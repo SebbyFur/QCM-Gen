@@ -1,7 +1,7 @@
 @extends('layout.app')
 
 @section('title')
-    Menu
+    Modèles
 @endsection
 
 @section('content')

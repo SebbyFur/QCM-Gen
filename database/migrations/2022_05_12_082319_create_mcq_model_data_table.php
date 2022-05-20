@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('mcq_model_data', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_question')->references('id')->on('questions');
-            $table->foreignId('id_mcq')->references('id')->on('mcq_model');
+            $table->foreignId('id_model')->references('id')->on('mcq_model');
+            $table->unique(['id_question', 'id_model']);
             $table->timestamps();
         });
     }
