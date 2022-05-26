@@ -29,6 +29,35 @@ function updateQuestion() {
     });
 }
 
+function updateQuestionsCount() {
+    const myRequest = new Request(route('updatequestion'), {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+
+        body: JSON.stringify({
+            id: ID_QUESTION,
+            answer_count: this.value
+        })
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .catch(error => {
+        error.then(error => {
+            const alert = document.querySelector('.alert');
+            alert.textContent = '';
+            alert.append(createAlert(error.message));
+        });
+    });
+}
+
 function deleteQuestion() {
     const myRequest = new Request(route('deleteqat'), {
         method: 'POST',
@@ -114,6 +143,7 @@ function createAnswer() {
         childDiv.setAttribute('id', data.id);
         
         let checkbox = document.createElement('input');
+        checkbox.disabled = true;
         checkbox.setAttribute('class', 'form-check-input mx-2 my-3 is_correct');
         checkbox.setAttribute('type', 'checkbox');
 
@@ -129,7 +159,7 @@ function createAnswer() {
         let img = document.createElement('i');
         img.setAttribute('class', 'bi bi-dash-circle-fill');
         
-        checkbox.addEventListener('click', updateAnswer);
+        checkbox.addEventListener('click', updateAnswerIsValid);
         input.addEventListener('blur', updateAnswer);
         button.addEventListener('click', deleteAnswer);
 
@@ -167,12 +197,12 @@ function deleteAnswer() {
     fetch(myRequest)
     .then(response => {
         if (response.ok) return response.json()
-
+        
         throw response.json();
     })
     .then(data => {
-        console.log(data);
         this.parentNode.parentNode.remove();
+        updateCheckedBoxes();
     })
     .catch(error => {
         error.then(error => {
@@ -193,6 +223,8 @@ function updateAnswer() {
         this.parentNode.children[0].disabled = false;
     }
 
+    updateCheckedBoxes();
+
     const myRequest = new Request(route('updateanswer'), {
         method: 'POST',
         headers: {
@@ -202,7 +234,6 @@ function updateAnswer() {
 
         body: JSON.stringify({
             id_answer: this.parentNode.id,
-            is_correct: this.parentNode.children[0].checked ? 1 : 0,
             answer: answer
         })
     });
@@ -220,6 +251,55 @@ function updateAnswer() {
         });
     });
 }
+
+function updateAnswerIsValid() {
+    const myRequest = new Request(route('updateanswer'), {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+
+        body: JSON.stringify({
+            id_answer: this.parentNode.id,
+            is_correct: this.parentNode.children[0].checked ? 1 : 0,
+        })
+    });
+
+    fetch(myRequest)
+    .then(response => {
+        if (response.ok) return response.json()
+
+        throw response.json();
+    })
+    .catch(error => {
+        error.then(error => {
+            if (error.code == 1) this.checked = false;
+            document.querySelector('.alert').textContent = '';
+            document.querySelector('.alert').append(createAlert(error.message));
+        });
+    });
+
+    updateCheckedBoxes();
+    const checked = getCheckedBoxesCount();
+    const select = document.querySelector('.number-questions-select');
+
+    if (checked !== 0) {
+        select.disabled = false;
+        if (!this.checked) {
+            const option = document.createElement('option');
+            option.value = checked + 1;
+            option.innerText = checked + 1;
+            option.setAttribute('class', 'select-answers-max');
+            option.addEventListener('click', updateQuestionsCount);
+            select.prepend(option);
+        } else {
+            updatePossibleAnswers(checked + 1);
+        }
+    } else {
+        select.disabled = true;
+    }
+} 
 
 function updateBelongingTag() {
     const myRequest = new Request(this.checked ? route('createtag') : route('deletetag'), {
@@ -249,6 +329,35 @@ function updateBelongingTag() {
     });
 }
 
+function updateCheckedBoxes() {
+    const count = getCheckedBoxesCount();
+
+    for (let checkbox of document.getElementsByClassName('is_correct'))
+        if (!checkbox.checked) checkbox.disabled = (count === 4 || checkbox.parentNode.children[1].value === ""); 
+}
+
+function getCheckedBoxesCount() {
+    let count = 0;
+    for (let checkbox of document.getElementsByClassName('is_correct'))
+        if (checkbox.checked) count++;
+
+    return count;
+}
+
+function updatePossibleAnswers(count) {
+    const select = document.querySelector('.number-questions-select');
+    select.textContent = '';
+
+    for (let i = count; i <= 6; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.innerText = i;
+        option.setAttribute('class', 'select-answers-max');
+        option.addEventListener('click', updateQuestionsCount);
+        select.append(option);
+    }
+}
+
 document.querySelector('.rm-question').addEventListener('click', deleteQuestion);
 document.querySelector('.question-input').addEventListener('blur', updateQuestion);
 document.querySelector('.btn-success').addEventListener('click', createAnswer);
@@ -260,7 +369,13 @@ for (let rmbtn of document.getElementsByClassName('rm-answer'))
     rmbtn.addEventListener('click', deleteAnswer);
 
 for (let checkbox of document.getElementsByClassName('is_correct'))
-    checkbox.addEventListener('click', updateAnswer);
+    checkbox.addEventListener('click', updateAnswerIsValid);
 
 for (let input of document.getElementsByClassName('answer'))
     input.addEventListener('blur', updateAnswer);
+
+for (let select of document.getElementsByClassName('select-answers-max'))
+    select.addEventListener('click', updateQuestionsCount);
+
+updateCheckedBoxes();
+if (getCheckedBoxesCount() == 0) document.querySelector('.number-questions-select').disabled = true;

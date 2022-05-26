@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('question')->unique();
             $table->boolean('is_valid')->default(false);
+            $table->integer('answer_count')->default(0);
             $table->timestamps();
         });
     }

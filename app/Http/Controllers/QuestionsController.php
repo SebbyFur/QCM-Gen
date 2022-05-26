@@ -60,7 +60,22 @@ class QuestionsController extends Controller
 
         try {
             $a = Question::where('id', $request->id)->firstOrFail();
-            $a->update(['question' => $request->question]);
+            if (isset($request->question)) {
+                if ($request->question == '') {
+                    return response()->json(
+                    array(
+                        'status' => 'error',
+                        'message' => "Le champ de question ne peut pas être vide !"
+                    ), 500);
+                } else {
+                    $a->update(['question' => $request->question]);
+                }
+            }
+
+            if (isset($request->answer_count)) {
+                if ($request->answer_count >= $a->getMinPossibleAnswers() && $request->answer_count <= 6)
+                    $a->update(['answer_count' => $request->answer_count]);
+            }
         } catch (ModelNotFoundException $err) {
             return response()->json(
             array(

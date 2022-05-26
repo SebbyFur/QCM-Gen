@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateQuestionRequest extends FormRequest
+class DeleteMCQRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,23 +24,19 @@ class UpdateQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required'],
-            'question' => ['nullable'],
-            'answer_count' => ['nullable']
+            'id' => ['required']
         ];
     }
 
     public function messages() {
         return [
-            'id.required' => 'Saisissez un id !'
+            'id.required' => "Il faut donner un ID !",
         ];
     }
 
     public function attributes() {
         return [
             'id' => 'id',
-            'question' => 'question',
-            'answer_count' => 'answer_count'
         ];
     }
 }

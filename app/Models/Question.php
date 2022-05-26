@@ -16,7 +16,8 @@ class Question extends Model
 
     protected $fillable = [
         'question',
-        'is_valid'
+        'is_valid',
+        'answer_count'
     ];
 
     public function isValid() : bool {
@@ -38,5 +39,9 @@ class Question extends Model
         }
 
         return ($hasFalse && $hasTrue);
+    }
+
+    public function getMinPossibleAnswers() {
+        return Answer::where(['id_question' => $this->id, 'is_correct' => true])->count() + 1;
     }
 }

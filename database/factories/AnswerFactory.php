@@ -17,8 +17,7 @@ class AnswerFactory extends Factory
     public function definition()
     {
         return [
-            'answer' => $this->faker->sentence(8, true),
-            'is_correct' => $this->faker->numberBetween(0, 1)
+            'answer' => $this->faker->sentence(8, true)
         ];
     }
 }

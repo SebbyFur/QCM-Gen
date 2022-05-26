@@ -21,15 +21,21 @@ return new class extends Migration
 
         Tags::insert(['tag' => 'C']);
         Tags::insert(['tag' => 'C++']);
+        Tags::insert(['tag' => 'C#']);
         Tags::insert(['tag' => 'Go']);
         Tags::insert(['tag' => 'Python']);
         Tags::insert(['tag' => 'Laravel']);
+        Tags::insert(['tag' => 'Eloquent']);
         Tags::insert(['tag' => 'Javascript']);
         Tags::insert(['tag' => 'HTML']);
         Tags::insert(['tag' => 'CSS']);
+        Tags::insert(['tag' => 'UML']);
         Tags::insert(['tag' => 'Typescript']);
         Tags::insert(['tag' => 'Lua']);
         Tags::insert(['tag' => 'Java']);
+        Tags::insert(['tag' => 'SQL']);
+        Tags::insert(['tag' => 'Ruby']);
+        Tags::insert(['tag' => 'HTTP']);
     }
 
     /**

@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tags extends Model
+class MCQData extends Model
 {
     use HasFactory;
 
-    protected $table = 'tags';
+    protected $table = 'mcq_data';
 
     protected $fillable = [
-        'tag'
+        'id_question',
+        'id_answer',
+        'id_mcq',
+        'choice'
     ];
 }

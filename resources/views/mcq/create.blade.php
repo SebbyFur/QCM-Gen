@@ -23,51 +23,35 @@
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-model" role="tabpanel" aria-labelledby="pills-model-tab">
             <div class="row">
-                @foreach ($data['models'] as $model)
-                <div class="col-sm-3 model-div-{{$model->id}}">
-                    <div class="card mx-auto my-4" style="width: 12rem; height: 14rem;">
-                        <div class="card-body d-flex align-items-center flex-column text-break">
-                            <h5 class="card-title text-center">{{$model->title}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">#{{$model->id}}</h6>
-                            <div class="d-flex flex-column justify-content-center align-items-center">
-                                <a class="btn btn-primary my-2 edit-model" href='{{ route('editmodel', $model['id']) }}'>Modifier le modèle</a>
-                                @if ($model['is_generator'] == 1)
-                                <input class="form-check-input model-radio-button" type="radio" name="exampleRadios" value="{{ $model->id }}" checked>
-                                @else
-                                <div class="text-center">Ce modèle n'est pas générateur. Certaines questions sont invalides ou il est vide!</div>
-                                @endif
+                @if ($data['models']->count() == 0)
+                    <h2 class="text-center text-secondary my-5">(aucun modèle existant)</h2>
+                @else
+                    @foreach ($data['models'] as $model)
+                    <div class="col-sm-3 model-div-{{$model->id}}">
+                        <div class="card mx-auto my-4" style="width: 12rem; height: 14rem;">
+                            <div class="card-body d-flex align-items-center flex-column text-break">
+                                <h5 class="card-title text-center">{{$model->title}}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">#{{$model->id}}</h6>
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <a class="btn btn-primary my-2 edit-model" href='{{ route('editmodel', $model['id']) }}'>Modifier le modèle</a>
+                                    @if ($model['is_generator'] == 1)
+                                    <input class="form-check-input model-radio-button" type="radio" name="exampleRadios" value="{{ $model->id }}" checked>
+                                    @else
+                                    <div class="text-center">Ce modèle n'est pas générateur. Certaines questions sont invalides ou il est vide!</div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                @endforeach
-                <div class="d-flex">
-                    <div class="form-floating w-100 mx-3">
-                        <select class="form-select" id="questionsSelect" disabled>
-                            <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                        <label for="questionsSelect" class='mx-2'>Sélectionnez le nombre de questions</label>
-                    </div>
-                    <div class="form-floating w-100 mx-3">
-                        <select class="form-select" id="answersSelect" disabled>
-                            <option selected>Open this select menu</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                        <label for="answersSelect" class='mx-2'>Sélectionnez le nombre de réponses par question</label>
-                    </div>
-                </div>
+                    @endforeach
+                @endif
             </div>
         </div>
         <div class="tab-pane fade" id="pills-tag" role="tabpanel" aria-labelledby="pills-tag-tab">
             <div>
                 @foreach ($data['tags'] as $tag)
                 <div class="form-check my-2">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                    <input class="form-check-input tag-radio-button" type="radio" name="exampleRadios" id="exampleRadios1" value="{{ $tag['id'] }}" checked>
                     <label class="form-check-label" for="exampleRadios1">
                         {{ $tag['tag'] }}
                     </label>
@@ -77,6 +61,14 @@
         </div>
         <div class="tab-pane fade" id="pills-random" role="tabpanel" aria-labelledby="pills-random-tab">
             Ac
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <div class="form-floating w-50 mx-3">
+            <select class="form-select questions-select" id="questionsSelect" disabled>
+
+            </select>
+            <label for="questionsSelect" class='mx-2'>Sélectionnez le nombre de questions pour le QCM</label>
         </div>
     </div>
     <h2 class='mt-5'>Choix des étudiants</h2>
@@ -117,5 +109,6 @@
 </div>
 
 @routes
+<script src="{{ asset('js/scripts/mcq_create.js') }}"></script>
 
 @endsection

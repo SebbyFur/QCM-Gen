@@ -47,6 +47,7 @@ Route::controller(AnswersController::class)->group(function () {
 Route::controller(QuestionsTagsController::class)->group(function () {
     Route::post('/post/tag/create', 'create')->name("createtag");
     Route::post('/post/tag/delete', 'delete')->name("deletetag");
+    Route::get('/get/tag/questions/{id}', 'countTagQuestions')->name("counttagquestions"); 
 });
 
 //QAT
@@ -78,6 +79,7 @@ Route::controller(MCQModelController::class)->group(function () {
     Route::get('/model/{id}', 'readView')->name('editmodel');
     Route::post('/post/model/create', 'create')->name("createmcqmodel");
     Route::post('/post/model/delete', 'delete')->name("deletemcqmodel");
+    Route::get('/get/model/specifics/{id}', 'countMCQQuestions')->name("countmcqquestions");
 });
 
 //MCQModelData
@@ -90,4 +92,6 @@ Route::controller(MCQModelDataController::class)->group(function () {
 Route::controller(MCQController::class)->group(function () {
     Route::get('/mcqs/menu', 'menuView')->name('mcqmenu');
     Route::get('/mcq/create', 'createView')->name('mcqcreate');
+    Route::post('/post/mcq/create', 'create')->name('createmcq');
+    Route::post('/post/mcq/delete', 'delete')->name('deletemcq');
 });

@@ -60,6 +60,16 @@
             <button type='button' class='add-entry btn btn-success w-25'><i class="bi bi-plus-circle-fill icon-add"></i></button>
         </div>
     </div>
+    <div class="d-flex justify-content-center my-3">
+        <div class="form-floating w-50">
+            <select class="form-select number-questions-select" id="questions">
+                @for ($i = $ret['minPossibleAnswers']; $i <= 6; $i++)
+                <option class="select-answers-max" value="{{ $i }}" @if ($i == $ret['question']['answer_count']) selected @endif>{{ $i }}</option>
+                @endfor
+            </select>
+            <label for="questions" class='mx-2'>Sélectionnez le nombre de réponses possible pour cette question</label>
+        </div>
+    </div>
 </div>
 
 @routes

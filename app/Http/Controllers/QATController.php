@@ -19,8 +19,10 @@ use App\Http\Controller\QuestionsAnswersController;
 class QATController extends Controller
 {
     public function read(Request $request) {
+        $question = Question::findOrFail($request->id);
         $ret = [
-            'question' => Question::findOrFail($request->id),
+            'question' => $question,
+            'minPossibleAnswers' => $question->getMinPossibleAnswers(),
             'answers'  => Answer::where('id_question', $request->id)->get()
             ->makeHidden(['created_at', 'updated_at', 'id_question', 'id_answer']),
             'tags'     => Tags::join('questions_tags', function($join) {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\MCQModel;
 use App\Models\MCQModelData;
 use App\Models\Question;
+use App\Models\Answer;
 use App\Http\Requests\CreateMCQModelRequest;
 use App\Http\Requests\DeleteMCQModelRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -61,5 +62,26 @@ class MCQModelController extends Controller
         $models = MCQModel::all();
 
         return view('model.menu', ['models' => $models]);
+    }
+
+    public function countMCQQuestions(Request $request) {
+        try {
+            MCQModel::findOrFail($request->id);
+            $count = MCQModelData::join('questions', 'questions.id', '=', 'mcq_model_data.id_question')
+            ->where('id_model', $request->id)
+            ->count();
+        } catch (ModelNotFoundException $err) {
+            return response()->json(
+            array(
+                'status' => 'error',
+                'message' => "Ce modèle n'existe pas"
+            ), 500);
+        }
+
+        return response()->json(
+        array(
+            'status' => 'success',
+            'questions' => $count
+        ), 200);
     }
 }

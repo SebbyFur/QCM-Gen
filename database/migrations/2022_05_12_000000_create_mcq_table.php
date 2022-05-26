@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('mcq', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->foreignId('id_model')->nullable()->default(NULL)->references('id')->on('mcq_model');
+            $table->foreignId('id_tag')->nullable()->default(NULL)->references('id')->on('tags');
+            $table->foreignId('id_student')->references('id')->on('students');
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\QuestionsTags;
+use App\Models\Tags;
 use App\Http\Requests\CreateQuestionsTagsRequest;
 use App\Http\Requests\DeleteQuestionsTagsRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -35,5 +36,25 @@ class QuestionsTagsController extends Controller
         }
 
         return 'true';
+    }
+
+    public function countTagQuestions(Request $request) {
+        try {
+            Tags::findOrFail($request->id);
+            $count = QuestionsTags::where('id_tag', $request->id)
+            ->count();
+        } catch (ModelNotFoundException $err) {
+            return response()->json(
+            array(
+                'status' => 'error',
+                'message' => "Ce modèle n'existe pas"
+            ), 500);
+        }
+
+        return response()->json(
+        array(
+            'status' => 'success',
+            'questions' => $count
+        ), 200);
     }
 }

@@ -45,6 +45,9 @@ class AnswersController extends Controller
         try {
             $answer = Answer::findOrFail($request->id_answer);
             $answer->delete();
+
+            $b = Question::find($answer->id_question);
+            $b->update(['is_valid' => $b->isValid()]);
         } catch (ModelNotFoundException $err) {
             return 'false';
         }
@@ -57,17 +60,41 @@ class AnswersController extends Controller
 
         try {
             $answer = Answer::findOrFail($request->id_answer);
+            $b = Question::find($answer->id_question);
+
+            if (isset($request->is_correct)) {
+                $count = Answer::where(['is_correct' => true, 'id_question' => $answer->id_question])->count();
+
+                if ($count >= 4 && $request->is_correct == 1) {
+                    return response()->json(
+                    array(
+                        'status' => 'error',
+                        'message' => "Nombre maximum de réponses valides atteint",
+                        'code' => 1
+                    ), 500);
+                }
+            }
+
             $answer->update($request->all());
 
             if (!isset($answer->answer))
                 $answer->update(['is_correct' => 0]);
 
-            $b = Question::find($answer->id_question);
             $b->update(['is_valid' => $b->isValid()]);
+
+            $min = $b->getMinPossibleAnswers();
+            if ($b->answer_count < $min) $b->update(['answer_count' => $min]);
         } catch (ModelNotFoundException $err) {
-            return 'false';
+            return response()->json(
+            array(
+                'status' => 'error',
+                'message' => "Impossible de trouver la réponse",
+            ), 500);
         }
 
-        return 'true';
+        return response()->json(
+        array(
+            'status' => 'success'
+        ), 200);
     }
 }
