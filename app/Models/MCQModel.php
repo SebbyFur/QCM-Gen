@@ -26,4 +26,10 @@ class MCQModel extends Model
 
         return true;
     }
+
+    function getValidQuestionsCount() {
+        return MCQModelData::join('questions', 'questions.id', '=', 'mcq_model_data.id_question')
+        ->where(['id_model' => $this->id, 'is_valid' => true])
+        ->count();
+    }
 }

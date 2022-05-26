@@ -10,7 +10,10 @@ class Group extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_group',
         'name_group'
     ];
+
+    public function getStudents() {
+        return Student::where(['group_id' => $this->id])->get();
+    }
 }

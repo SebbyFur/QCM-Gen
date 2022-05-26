@@ -17,7 +17,7 @@
             <button class="nav-link" id="pills-tag-tab" data-bs-toggle="pill" data-bs-target="#pills-tag" type="button" role="tab" aria-controls="pills-tag" aria-selected="false">Génération de QCM par tag</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="pills-random-tab" data-bs-toggle="pill" data-bs-target="#pills-random" type="button" role="tab" aria-controls="pills-random" aria-selected="false">Génération de QCM aléatoire</button>
+            <button class="nav-link random" data-count="{{ $data['question_count'] }}" id="pills-random-tab" data-bs-toggle="pill" data-bs-target="#pills-random" type="button" role="tab" aria-controls="pills-random" aria-selected="false">Génération de QCM aléatoire</button>
         </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
@@ -35,7 +35,7 @@
                                 <div class="d-flex flex-column justify-content-center align-items-center">
                                     <a class="btn btn-primary my-2 edit-model" href='{{ route('editmodel', $model['id']) }}'>Modifier le modèle</a>
                                     @if ($model['is_generator'] == 1)
-                                    <input class="form-check-input model-radio-button" type="radio" name="exampleRadios" value="{{ $model->id }}" checked>
+                                    <input class="form-check-input model-radio-button" data-count="{{$model->question_count}}" type="radio" name="exampleRadios" value="{{ $model->id }}">
                                     @else
                                     <div class="text-center">Ce modèle n'est pas générateur. Certaines questions sont invalides ou il est vide!</div>
                                     @endif
@@ -51,7 +51,7 @@
             <div>
                 @foreach ($data['tags'] as $tag)
                 <div class="form-check my-2">
-                    <input class="form-check-input tag-radio-button" type="radio" name="exampleRadios" id="exampleRadios1" value="{{ $tag['id'] }}" checked>
+                    <input class="form-check-input tag-radio-button" data-count="{{$tag->question_count}}" type="radio" name="exampleRadios" id="exampleRadios1" value="{{ $tag['id'] }}" @if($tag->question_count == 0) disabled @endif>
                     <label class="form-check-label" for="exampleRadios1">
                         {{ $tag['tag'] }}
                     </label>
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="tab-pane fade" id="pills-random" role="tabpanel" aria-labelledby="pills-random-tab">
-            Ac
+            (Sélectionnez simplement le nombre de questions maximales possibles pour le QCM)
         </div>
     </div>
     <div class="d-flex justify-content-center">
@@ -76,10 +76,14 @@
         <div class="col">
             <div class="border border-1" style='background-color: #f9f9f9;'>
                 <div class="groups scroll-margin my-2" style='height: 35rem; overflow-y: scroll;'>
+                    <div class='ms-5 my-2'>
+                        <button type='button' class='btn btn-outline-primary check-all-students'>Cocher tous les étudiants</button>
+                        <button type='button' class='btn btn-outline-danger ms-2 uncheck-all-students'>Décocher tous les étudiants</button>
+                    </div>
                     @foreach ($data['groups'] as $group)
                     <div class="container d-flex mb-2">
                         <div class="d-flex list-group-item flex-grow-1">
-                            <div>#{{ $group->id }}.</div>
+                            @if ($group->id != -1) <div>#{{ $group->id }}.</div> @endif
                             <div class='mx-1'>
                                 <div data-id='{{ $group->id }}' class='group-item'>{{ $group->name_group }}</div>
                             </div>
@@ -87,21 +91,35 @@
                         <button data-id='{{ $group->id }}' type='button' class='btn btn-outline-primary mx-1 group-info'><i class="bi bi-list"></i></button>
                     </div>
                     @endforeach
-                    <div class="container d-flex mb-2">
-                        <div class="d-flex list-group-item flex-grow-1">
-                            <div class='mx-1'>
-                                <div data-id='NONE' class='group-item'>Autre</div>
-                            </div>
-                        </div>
-                        <button data-id='NONE' type='button' class='btn btn-outline-primary mx-1 group-info'><i class="bi bi-list"></i></button>
-                    </div>
                 </div>
             </div>
         </div>
         <div class="col">
             <div class="border border-1" style='background-color: #f9f9f9;'>
                 <div class="students scroll-margin my-2" style='height: 35rem; overflow-y: scroll;'>
-                    
+                    @foreach ($data['groups'] as $group)
+                        <div class='students-group-{{ $group->id }}' hidden>
+                            @if (count($group->students) == 0)
+                            <h2 class="text-center text-secondary mt-5">(vide)</h2>
+                            @else
+                            <div class='ms-5 my-2'>
+                                <button type='button' class='btn btn-outline-primary check-all-group-students' data-id="{{ $group->id }}">Tout cocher</button>
+                                <button type='button' class='btn btn-outline-danger ms-2 uncheck-all-group-students' data-id="{{ $group->id }}">Tout décocher</button>
+                            </div>
+                            @foreach($group->students as $student)
+                            <div class="container d-flex mb-2 align-items-center">
+                                <div class="d-flex list-group-item flex-grow-1">
+                                    <div>#{{ $student->id }}.</div>
+                                    <div class='mx-1 d-flex '>
+                                        <div data-id='{{ $student->id }}' class='group-item'>{{ $student->first_name }} {{ $student->last_name }}</div>
+                                    </div>
+                                </div>
+                                <input class='form-check-input ms-3 checkboxes checkbox-group-{{ $group->id }}' type='checkbox' id='{{ $student->id }}'>
+                            </div>
+                            @endforeach
+                            @endif
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

@@ -50,7 +50,10 @@ class MCQController extends Controller
             ), 500);
         }
 
-        return 'ok';
+        return response()->json(
+            array(
+                'status' => 'success',
+            ), 200);
     }
 
     public function delete(DeleteMCQRequest $request) {
@@ -175,17 +178,33 @@ class MCQController extends Controller
     public function createView() {
         $models = MCQModel::all();
 
-        foreach ($models as &$model)
+        foreach ($models as &$model){
             $model->is_generator = $model->isGenerator();
+            $model->question_count = $model->getValidQuestionsCount();
+        }
 
         $tags = Tags::all();
+
+        foreach ($tags as &$tag)
+            $tag->question_count = $tag->getValidQuestionsCount();
         
         $groups = Group::all();
+        $other = new Group([
+            'name_group' => 'Autre'
+        ]);
+        $other->id = -1;
+        $other->students = Student::where('group_id', NULL);
+
+        $groups->push($other);
+
+        foreach ($groups as &$group)
+            $group->students = $group->getStudents();
 
         $data = [
             'models' => $models,
             'tags' => $tags,
-            'groups' => $groups
+            'groups' => $groups,
+            'question_count' => Question::where('is_valid', true)->count()
         ];
 
         return view('mcq.create', ['data' => $data]);
