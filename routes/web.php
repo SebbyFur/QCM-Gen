@@ -93,6 +93,7 @@ Route::controller(MCQController::class)->group(function () {
     Route::get('/mcqs/menu', 'menuView')->name('mcqmenu');
     Route::get('/mcq/create', 'createView')->name('mcqcreate');
     Route::get('/mcq/{id}', 'watchView')->name('mcqwatch');
+    Route::get('/mcq/pdf/{id}', 'getPdf')->name('mcqpdf');
     Route::post('/post/mcq/create', 'create')->name('createmcq');
     Route::post('/post/mcq/deleteAll', 'deleteAll')->name('deleteallmcq');
     Route::post('/post/mcq/delete', 'delete')->name('deletemcq');

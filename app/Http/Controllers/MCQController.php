@@ -16,6 +16,7 @@ use App\Models\Answer;
 use App\Http\Requests\CreateMCQRequest;
 use App\Http\Requests\DeleteMCQRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 
 class MCQController extends Controller
@@ -243,6 +244,11 @@ class MCQController extends Controller
     public function watchView(Request $request) {
         $id = $request->id;
 
+        return view('mcq.watch', $this->getWatchData($id));
+    }
+
+    public function getWatchData($id) {
+
         $title = MCQ::findOrFail($id)->getTitle();
         $questions = MCQData::join('questions', 'questions.id', '=', 'mcq_data.id_question')
         ->where('id_mcq', $id)
@@ -257,10 +263,17 @@ class MCQController extends Controller
             ->get();
         }
 
-        return view('mcq.watch', ['data' => [
+        return ['data' => [
             'id' => $id,
             'title' => $title,
             'questions' => $questions
-        ]]);
+        ]];
+    }
+
+    public function getPdf(Request $request) {
+        $id = $request->id;
+
+        $pdf = PDF::loadView('mcq.watch', $this->getWatchData($id));
+        return $pdf->download('watch.pdf');
     }
 }
