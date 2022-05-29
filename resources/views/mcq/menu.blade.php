@@ -1,7 +1,7 @@
 @extends('layout.app')
 
 @section('title')
-    QCMs
+    Liste
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@
         <div class="my-5">
             <div class="d-flex">
                 <h2 class="flex-grow-1">QCMs basés sur un modèle</h2>
-                <a type="button" class="btn btn-success" href="{{ route('mcqcreate') }}">Créer un QCM basé sur un modèle</a>
+                <a type="button" class="btn btn-success" href="{{ route('mcqcreate', ['opt' => 0]) }}">Créer un QCM basé sur un modèle</a>
             </div>
             <div class="model-mcqs rounded my-2">
                 <div class="row">
@@ -26,7 +26,7 @@
                                     <h5 class="card-title text-center">{{$mcq->title}}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">#{{$mcq->id}}</h6>
                                     <div class="d-flex flex-column justify-content-center align-items-center">
-                                        <a class="btn btn-success">Consulter le QCM</a>
+                                        <a class="btn btn-success" href="{{ route('mcqwatch', $mcq->id) }}">Consulter le QCM</a>
                                         <a class="btn btn-primary my-2 edit-mcq">Obtenir le PDF</a>
                                         <div class='dropdown dropup'>
                                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le QCM</button>
@@ -48,7 +48,7 @@
         <div class="my-5">
             <div class="d-flex">
                 <h2 class="flex-grow-1">QCMs basés sur une catégorie</h2>
-                <a type="button" class="btn btn-success" href="{{ route('mcqcreate') }}">Créer un QCM basé sur une catégorie</a>
+                <a type="button" class="btn btn-success" href="{{ route('mcqcreate', ['opt' => 1]) }}">Créer un QCM basé sur une catégorie</a>
             </div>
             <div class="category-mcqs rounded my-2">
                 <div class="row">
@@ -62,7 +62,7 @@
                                     <h5 class="card-title text-center">{{$mcq->title}}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">#{{$mcq->id}}</h6>
                                     <div class="d-flex flex-column justify-content-center align-items-center">
-                                        <a class="btn btn-success">Consulter le QCM</a>
+                                        <a class="btn btn-success" href="{{ route('mcqwatch', $mcq->id) }}">Consulter le QCM</a>
                                         <a class="btn btn-primary my-2 edit-mcq">Obtenir le PDF</a>
                                         <div class='dropdown dropup'>
                                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le QCM</button>
@@ -84,7 +84,7 @@
         <div class="my-5">
             <div class="d-flex">
                 <h2 class="flex-grow-1">QCMs non classés</h2>
-                <a type="button" class="btn btn-success" href="{{ route('mcqcreate') }}">Créer un QCM</a>
+                <a type="button" class="btn btn-success" href="{{ route('mcqcreate', ['opt' => 2]) }}">Créer un QCM</a>
             </div>
             <div class="unclassed-mcqs rounded my-2">
                 <div class="row">
@@ -98,7 +98,7 @@
                                     <h5 class="card-title text-center">{{$mcq->title}}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">#{{$mcq->id}}</h6>
                                     <div class="d-flex flex-column justify-content-center align-items-center">
-                                        <a class="btn btn-success">Consulter le QCM</a>
+                                        <a class="btn btn-success" href="{{ route('mcqwatch', $mcq->id) }}">Consulter le QCM</a>
                                         <a class="btn btn-primary my-2 edit-mcq">Obtenir le PDF</a>
                                         <div class='dropdown dropup'>
                                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le QCM</button>
@@ -115,6 +115,16 @@
                         @endforeach
                     @endif
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class='dropdown dropup d-flex justify-content-center my-5'>
+        <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger rmv-btn w-50'>Supprimer les QCMs</button>
+        <div class='dropdown-menu px-3 w-25' aria-labelledby="dropdownMenuLink">
+            <p class='text-center'>Vous êtes sur le point de supprimer TOUS les QCMs. La correction sera impossible ! Êtes-vous sûr ?</p>
+            <div class="d-flex justify-content-center">
+                <button type='button' class='btn btn-primary mx-1 rm-all-mcqs'>Oui</button>
+                <button type='button' class='btn btn-danger mx-1'>Non</button>
             </div>
         </div>
     </div>

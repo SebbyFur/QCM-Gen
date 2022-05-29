@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(QATSeeder::class);
         $this->call(GroupsSeeder::class);
+        $this->call(MCQModelSeeder::class);
     }
 }

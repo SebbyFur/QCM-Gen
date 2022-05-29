@@ -44,4 +44,8 @@ class Question extends Model
     public function getMinPossibleAnswers() {
         return Answer::where(['id_question' => $this->id, 'is_correct' => true])->count() + 1;
     }
+
+    public function getAnswerCount() {
+        return Answer::where('id_question', $this->id)->count();
+    }
 }

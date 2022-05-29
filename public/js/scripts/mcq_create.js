@@ -8,13 +8,13 @@ function displayStudents() {
     document.querySelector('.students-group-' + id_group).hidden = false;
 }
 
-function setMaxQuestions(int) {
+function setMaxQuestions() {
     const max = this.getAttribute('data-count');
-    
-    const questionsSelector = document.querySelector('.questions-select');
 
+    const questionsSelector = document.querySelector('.questions-select');
+    
     questionsSelector.textContent = '';
-    questionsSelector.disabled = false;
+    questionsSelector.disabled = max == 0;
 
     for (let i = 1; i <= max; i++) {
         const option = document.createElement('option');
@@ -44,6 +44,79 @@ function uncheckAllStudents() {
         checkbox.checked = false;
 }
 
+function getCheckedStudentsIds() {
+    const ret = [];
+
+    for (const checkbox of document.getElementsByClassName('checkboxes'))
+        if (checkbox.checked) ret.push(checkbox.id);
+
+    return ret;
+}
+
+function createMCQRequest() {
+    let data = {};
+    let category = '';
+    const studentIds = getCheckedStudentsIds();
+    const questionsCount = document.querySelector('.questions-select').value;
+
+    switch (document.querySelector('.nav-link.active').id) {
+        case 'pills-model-tab':
+            category = document.querySelector('.model-tab');
+            let checkedModel = undefined;
+            for (const ret of category.getElementsByClassName('model-radio-button'))
+                if (ret.checked) checkedModel = ret;
+
+            if (checkedModel === undefined) {
+                document.querySelector('.alert').textContent = '';
+                document.querySelector('.alert').append(createAlert("Choisissez un modèle !"));
+                return;
+            }
+
+            data = {
+                'id_model': checkedModel.value,
+                'student_ids': studentIds,
+                'questions_count': questionsCount,
+            }
+
+            break;
+        case 'pills-tag-tab':
+            category = document.querySelector('.tag-tab');
+            let checkedTag = undefined;
+            for (const ret of category.getElementsByClassName('tag-radio-button'))
+                if (ret.checked) checkedTag = ret;
+        
+            if (checkedTag === undefined) {
+                document.querySelector('.alert').textContent = '';
+                document.querySelector('.alert').append(createAlert("Choisissez un tag !"));
+                return;
+            }
+
+            data = {
+                'id_tag': checkedTag.value,
+                'student_ids': studentIds,
+                'questions_count': questionsCount,
+            }
+
+            break;
+        case 'pills-random-tab':
+            data = {
+                'is_random': 1,
+                'student_ids': studentIds,
+                'questions_count': questionsCount,
+            }
+            break;
+    }
+
+    axios.post(route('createmcq'), data)
+    .then(response => {
+        window.location.href = route('mcqmenu');
+    })
+    .catch(error => {
+        document.querySelector('.alert').textContent = '';
+        document.querySelector('.alert').append(createAlert(error.response.data.message));
+    })
+}
+
 for (const radio of document.getElementsByClassName('model-radio-button'))
     radio.addEventListener('click', setMaxQuestions);
 
@@ -59,6 +132,30 @@ for (const nav of document.getElementsByClassName('nav-link')) {
     })
 }
 
+function createAlert(text) {
+    let mainDiv = document.createElement('div');
+    mainDiv.setAttribute('class', "border border-4 alert alert-danger alert-dismissible fade show w-50 d-flex");
+    mainDiv.style.pointerEvents = 'auto';
+
+    let img = document.createElement('i');
+    img.setAttribute('class', 'bi bi-exclamation-triangle-fill flex-shrink-0 me-2');
+
+    let div = document.createElement('div');
+    div.setAttribute('class', 'alert-text');
+    div.innerText = text;
+
+    let btn = document.createElement('button');
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('class', 'btn-close');
+    btn.setAttribute('data-bs-dismiss', 'alert');
+
+    mainDiv.append(img);
+    mainDiv.append(div);
+    mainDiv.append(btn);
+
+    return mainDiv;
+}
+
 document.querySelector('.random').addEventListener('click', setMaxQuestions);
 
 for (const info of document.getElementsByClassName('group-info'))
@@ -72,3 +169,4 @@ for (const button of document.getElementsByClassName('uncheck-all-group-students
 
 document.querySelector('.check-all-students').addEventListener('click', checkAllStudents);
 document.querySelector('.uncheck-all-students').addEventListener('click', uncheckAllStudents);
+document.querySelector('.create-mcq').addEventListener('click', createMCQRequest);

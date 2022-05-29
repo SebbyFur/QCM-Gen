@@ -172,6 +172,7 @@ function createAnswer() {
         mainDiv.append(childDiv);
 
         document.querySelector('.answers-div').append(mainDiv);
+        updatePossibleAnswers()
     })
     .catch(error => {
         error.then(error => {
@@ -203,6 +204,7 @@ function deleteAnswer() {
     .then(data => {
         this.parentNode.parentNode.remove();
         updateCheckedBoxes();
+        updatePossibleAnswers();
     })
     .catch(error => {
         error.then(error => {
@@ -294,7 +296,7 @@ function updateAnswerIsValid() {
             option.addEventListener('click', updateQuestionsCount);
             select.prepend(option);
         } else {
-            updatePossibleAnswers(checked + 1);
+            updatePossibleAnswers();
         }
     } else {
         select.disabled = true;
@@ -344,11 +346,13 @@ function getCheckedBoxesCount() {
     return count;
 }
 
-function updatePossibleAnswers(count) {
+function updatePossibleAnswers() {
+    const count = getCheckedBoxesCount() == 1 ? 2 : getCheckedBoxesCount();
     const select = document.querySelector('.number-questions-select');
     select.textContent = '';
+    const size = document.getElementsByClassName('answer').length >= 6 ? 6 : document.getElementsByClassName('answer').length;
 
-    for (let i = count; i <= 6; i++) {
+    for (let i = count; i <= size; i++) {
         const option = document.createElement('option');
         option.value = i;
         option.innerText = i;

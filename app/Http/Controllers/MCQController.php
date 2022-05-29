@@ -16,6 +16,7 @@ use App\Models\Answer;
 use App\Http\Requests\CreateMCQRequest;
 use App\Http\Requests\DeleteMCQRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use DB;
 
 class MCQController extends Controller
 {
@@ -175,6 +176,11 @@ class MCQController extends Controller
         }
     }
 
+    public function deleteAll() {
+        DB::table('mcq_data')->delete();
+        DB::table('mcq')->delete();
+    }
+
     public function createView() {
         $models = MCQModel::all();
 
@@ -189,16 +195,17 @@ class MCQController extends Controller
             $tag->question_count = $tag->getValidQuestionsCount();
         
         $groups = Group::all();
+
+        foreach ($groups as &$group)
+            $group->students = $group->getStudents();
+
         $other = new Group([
             'name_group' => 'Autre'
         ]);
         $other->id = -1;
-        $other->students = Student::where('group_id', NULL);
+        $other->students = Student::where('group_id', NULL)->get();
 
         $groups->push($other);
-
-        foreach ($groups as &$group)
-            $group->students = $group->getStudents();
 
         $data = [
             'models' => $models,
@@ -231,5 +238,29 @@ class MCQController extends Controller
         ];
 
         return view('mcq.menu', ['data' => $data]);
+    }
+
+    public function watchView(Request $request) {
+        $id = $request->id;
+
+        $title = MCQ::findOrFail($id)->getTitle();
+        $questions = MCQData::join('questions', 'questions.id', '=', 'mcq_data.id_question')
+        ->where('id_mcq', $id)
+        ->select('questions.id')
+        ->groupBy('id')
+        ->get();
+
+        foreach ($questions as &$question) {
+            $question->question = Question::findOrFail($question->id)->question;
+            $question->answers = MCQData::join('answers', 'answers.id', '=', 'mcq_data.id_answer')
+            ->where(['mcq_data.id_mcq' => $id, 'mcq_data.id_question' => $question->id])
+            ->get();
+        }
+
+        return view('mcq.watch', ['data' => [
+            'id' => $id,
+            'title' => $title,
+            'questions' => $questions
+        ]]);
     }
 }

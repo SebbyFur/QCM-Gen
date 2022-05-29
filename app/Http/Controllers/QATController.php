@@ -23,6 +23,7 @@ class QATController extends Controller
         $ret = [
             'question' => $question,
             'minPossibleAnswers' => $question->getMinPossibleAnswers(),
+            'maxAnswers' => $question->getAnswerCount(),
             'answers'  => Answer::where('id_question', $request->id)->get()
             ->makeHidden(['created_at', 'updated_at', 'id_question', 'id_answer']),
             'tags'     => Tags::join('questions_tags', function($join) {
