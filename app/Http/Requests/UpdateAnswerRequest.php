@@ -25,7 +25,7 @@ class UpdateAnswerRequest extends FormRequest
     {
         return [
             'id_answer' => ['required'],
-            'answer' => ['nullable'],
+            'answer' => ['nullable', 'string', 'min:1', 'max:256'],
             'is_correct' => ['nullable']
         ];
     }

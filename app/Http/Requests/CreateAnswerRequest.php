@@ -25,7 +25,7 @@ class CreateAnswerRequest extends FormRequest
     {
         return [
             'id_question' => ['required'],
-            'answer' => ['nullable']
+            'answer' => ['nullable', 'string', 'min:1', 'max:256']
         ];
     }
 

@@ -24,7 +24,7 @@ class UpdateMCQModelRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required'],
+            'title' => ['required', 'string', 'min:1', 'max:20'],
             'id' => ['required']
         ];
     }

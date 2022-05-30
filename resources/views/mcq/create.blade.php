@@ -124,8 +124,9 @@
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-center">
-        <button type='button' class='create-mcq btn btn-success w-25 my-5'>Générer le(s) QCM(s)</button>
+    <div class="d-flex justify-content-center my-5">
+        <button type='button' class='create-mcq btn btn-success w-25'>Générer le(s) QCM(s)</button>
+        <div class="spinner-border ms-2" role="status" hidden></div>
     </div>
 </div>
 

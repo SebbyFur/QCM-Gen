@@ -273,7 +273,12 @@ class MCQController extends Controller
     public function getPdf(Request $request) {
         $id = $request->id;
 
-        $pdf = PDF::loadView('mcq.watch', $this->getWatchData($id));
+        $pdf = PDF::loadView('mcq.pdf', $this->getWatchData($id));
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+
         return $pdf->download('watch.pdf');
     }
 }

@@ -27,7 +27,7 @@
                                     <h6 class="card-subtitle mb-2 text-muted">#{{$mcq->id}}</h6>
                                     <div class="d-flex flex-column justify-content-center align-items-center">
                                         <a class="btn btn-success" href="{{ route('mcqwatch', $mcq->id) }}">Consulter le QCM</a>
-                                        <a class="btn btn-primary my-2 edit-mcq">Obtenir le PDF</a>
+                                        <a class="btn btn-primary my-2" href="{{ route('mcqpdf', $mcq->id) }}">Obtenir le PDF</a>
                                         <div class='dropdown dropup'>
                                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le QCM</button>
                                             <div class='dropdown-menu px-3' aria-labelledby="dropdownMenuLink">
@@ -63,7 +63,7 @@
                                     <h6 class="card-subtitle mb-2 text-muted">#{{$mcq->id}}</h6>
                                     <div class="d-flex flex-column justify-content-center align-items-center">
                                         <a class="btn btn-success" href="{{ route('mcqwatch', $mcq->id) }}">Consulter le QCM</a>
-                                        <a class="btn btn-primary my-2 edit-mcq">Obtenir le PDF</a>
+                                        <a class="btn btn-primary my-2" href="{{ route('mcqpdf', $mcq->id) }}">Obtenir le PDF</a>
                                         <div class='dropdown dropup'>
                                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le QCM</button>
                                             <div class='dropdown-menu px-3' aria-labelledby="dropdownMenuLink">
@@ -99,7 +99,7 @@
                                     <h6 class="card-subtitle mb-2 text-muted">#{{$mcq->id}}</h6>
                                     <div class="d-flex flex-column justify-content-center align-items-center">
                                         <a class="btn btn-success" href="{{ route('mcqwatch', $mcq->id) }}">Consulter le QCM</a>
-                                        <a class="btn btn-primary my-2 edit-mcq">Obtenir le PDF</a>
+                                        <a class="btn btn-primary my-2" href="{{ route('mcqpdf', $mcq->id) }}">Obtenir le PDF</a>
                                         <div class='dropdown dropup'>
                                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le QCM</button>
                                             <div class='dropdown-menu px-3' aria-labelledby="dropdownMenuLink">

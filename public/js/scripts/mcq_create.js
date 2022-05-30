@@ -58,6 +58,10 @@ function createMCQRequest() {
     let category = '';
     const studentIds = getCheckedStudentsIds();
     const questionsCount = document.querySelector('.questions-select').value;
+    const createMCQButton = document.querySelector('.create-mcq');
+    const spinner = document.querySelector('.spinner-border');
+    createMCQButton.disabled = true;
+    spinner.hidden = false;
 
     switch (document.querySelector('.nav-link.active').id) {
         case 'pills-model-tab':
@@ -69,6 +73,7 @@ function createMCQRequest() {
             if (checkedModel === undefined) {
                 document.querySelector('.alert').textContent = '';
                 document.querySelector('.alert').append(createAlert("Choisissez un modèle !"));
+                spinner.hidden = true;
                 return;
             }
 
@@ -88,6 +93,7 @@ function createMCQRequest() {
             if (checkedTag === undefined) {
                 document.querySelector('.alert').textContent = '';
                 document.querySelector('.alert').append(createAlert("Choisissez un tag !"));
+                spinner.hidden = true;
                 return;
             }
 
@@ -114,6 +120,8 @@ function createMCQRequest() {
     .catch(error => {
         document.querySelector('.alert').textContent = '';
         document.querySelector('.alert').append(createAlert(error.response.data.message));
+        createMCQButton.disabled = false;
+        spinner.hidden = true;
     })
 }
 
