@@ -18,7 +18,7 @@ class QATSeeder extends Seeder
      */
     public function run()
     {
-        $questions = Question::factory()->count(100)->create();
+        $questions = Question::factory()->count(500)->create();
 
         foreach ($questions as $question) {
             $answers = Answer::factory()->count(10)->create(['id_question' => $question->id]);

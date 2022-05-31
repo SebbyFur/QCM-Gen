@@ -11,17 +11,17 @@
     <h2 class='mt-3'>Type de QCM</h2>
     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link @if (isset($_GET['opt']) && $_GET['opt'] == 0) active @endif" id="pills-model-tab" data-bs-toggle="pill" data-bs-target="#pills-model" type="button" role="tab" aria-controls="pills-model" aria-selected="true">Génération de QCM par modèle</button>
+            <button class="nav-link active" id="pills-model-tab" data-bs-toggle="pill" data-bs-target="#pills-model" type="button" role="tab" aria-controls="pills-model" aria-selected="true">Génération de QCM par modèle</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link @if (isset($_GET['opt']) && $_GET['opt'] == 1) active @endif" id="pills-tag-tab" data-bs-toggle="pill" data-bs-target="#pills-tag" type="button" role="tab" aria-controls="pills-tag" aria-selected="false">Génération de QCM par tag</button>
+            <button class="nav-link" id="pills-tag-tab" data-bs-toggle="pill" data-bs-target="#pills-tag" type="button" role="tab" aria-controls="pills-tag" aria-selected="false">Génération de QCM par tag</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link random @if (isset($_GET['opt']) && $_GET['opt'] == 2) active @endif" data-count="{{ $data['question_count'] }}" id="pills-random-tab" data-bs-toggle="pill" data-bs-target="#pills-random" type="button" role="tab" aria-controls="pills-random" aria-selected="false">Génération de QCM aléatoire</button>
+            <button class="nav-link random" data-count="{{ $data['question_count'] }}" id="pills-random-tab" data-bs-toggle="pill" data-bs-target="#pills-random" type="button" role="tab" aria-controls="pills-random" aria-selected="false">Génération de QCM aléatoire</button>
         </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show model-tab @if (isset($_GET['opt']) && $_GET['opt'] == 0) active @endif" id="pills-model" role="tabpanel" aria-labelledby="pills-model-tab">
+        <div class="tab-pane fade show model-tab active" id="pills-model" role="tabpanel" aria-labelledby="pills-model-tab">
             <div class="row">
                 @if ($data['models']->count() == 0)
                     <h2 class="text-center text-secondary my-5">(aucun modèle existant)</h2>
@@ -47,7 +47,7 @@
                 @endif
             </div>
         </div>
-        <div class="tab-pane fade tag-tab @if (isset($_GET['opt']) && $_GET['opt'] == 1) active @endif" id="pills-tag" role="tabpanel" aria-labelledby="pills-tag-tab">
+        <div class="tab-pane fade tag-tab" id="pills-tag" role="tabpanel" aria-labelledby="pills-tag-tab">
             <div>
                 @foreach ($data['tags'] as $tag)
                 <div class="form-check my-2">
@@ -59,7 +59,7 @@
                 @endforeach
             </div>
         </div>
-        <div class="tab-pane fade random-tab @if (isset($_GET['opt']) && $_GET['opt'] == 2) active @endif" id="pills-random" role="tabpanel" aria-labelledby="pills-random-tab">
+        <div class="tab-pane fade random-tab" id="pills-random" role="tabpanel" aria-labelledby="pills-random-tab">
             (Sélectionnez simplement le nombre de questions maximales possibles pour le QCM)
         </div>
     </div>
@@ -69,6 +69,15 @@
 
             </select>
             <label for="questionsSelect" class='mx-2'>Sélectionnez le nombre de questions pour le QCM</label>
+        </div>
+        <div class="form-floating w-50 mx-3 my-5">
+            <select class="form-select exam-select" id="exam">
+                <option class="update-mcq-exam-button" value="NONE">Aucun</option>
+                @foreach ($data['exams'] as $exam)
+                <option class="update-mcq-exam-button" value="{{ $exam->id }}">#{{ $exam->id }}. {{ $exam->title }}</option>
+                @endforeach
+            </select>
+            <label for="exam">Examen</label>
         </div>
     </div>
     <h2 class='mt-5'>Choix des étudiants</h2>

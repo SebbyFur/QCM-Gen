@@ -58,6 +58,7 @@ function createMCQRequest() {
     let category = '';
     const studentIds = getCheckedStudentsIds();
     const questionsCount = document.querySelector('.questions-select').value;
+    const examId = document.querySelector('.exam-select').value;
     const createMCQButton = document.querySelector('.create-mcq');
     const spinner = document.querySelector('.spinner-border');
     createMCQButton.disabled = true;
@@ -81,6 +82,7 @@ function createMCQRequest() {
                 'id_model': checkedModel.value,
                 'student_ids': studentIds,
                 'questions_count': questionsCount,
+                'id_exam': examId
             }
 
             break;
@@ -101,6 +103,7 @@ function createMCQRequest() {
                 'id_tag': checkedTag.value,
                 'student_ids': studentIds,
                 'questions_count': questionsCount,
+                'id_exam': examId
             }
 
             break;
@@ -109,6 +112,7 @@ function createMCQRequest() {
                 'is_random': 1,
                 'student_ids': studentIds,
                 'questions_count': questionsCount,
+                'id_exam': examId
             }
             break;
     }

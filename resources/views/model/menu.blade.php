@@ -16,7 +16,7 @@
                     <h5 class="card-title text-center">{{$model->title}}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">#{{$model->id}}</h6>
                     <div class="d-flex flex-column justify-content-center align-items-center">
-                        <a class="btn btn-success">Générer un QCM</a>
+                        <a class="btn btn-success" href='{{ route('mcqcreate') }}'>Générer un QCM</a>
                         <a class="btn btn-primary my-2 edit-model" href='{{ route('editmodel', $model['id']) }}'>Modifier le modèle</a>
                         <div class='dropdown dropup'>
                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le modèle</button>

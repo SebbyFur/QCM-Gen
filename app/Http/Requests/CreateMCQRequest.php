@@ -27,7 +27,8 @@ class CreateMCQRequest extends FormRequest
             'id_model' => ['nullable'],
             'id_tag' => ['nullable'],
             'is_random' => ['nullable'],
-            'questions_count' => ['required', 'integer', 'min:1'],
+            'id_exam' => ['nullable'],
+            'questions_count' => ['required', 'integer', 'min:1', 'max:120'],
             'student_ids' => ['required', 'array'],
             'student_ids.*' => ['integer'],
         ];
@@ -45,6 +46,7 @@ class CreateMCQRequest extends FormRequest
             'id_model' => 'id_model',
             'id_tag' => 'id_tag',
             'is_random' => 'is_random',
+            'id_exam' => 'id_exam',
             'questions_count' => 'questions_count',
             'student_ids' => 'student_ids'
         ];

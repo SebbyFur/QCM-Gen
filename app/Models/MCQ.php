@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Correction;
 
 class MCQ extends Model
 {
@@ -16,6 +17,7 @@ class MCQ extends Model
     protected $fillable = [
         'id_student',
         'id_model',
+        'id_exam',
         'id_tag'
     ];
 
@@ -33,5 +35,9 @@ class MCQ extends Model
             $modelTitle = MCQModel::find($this->id_model)->title;
             return '('.$modelTitle.') '.$first_name.' '.$last_name;
         }
+    }
+
+    public function getMark() {
+        
     }
 }

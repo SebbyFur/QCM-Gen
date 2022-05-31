@@ -12,7 +12,7 @@
         <div class="my-5">
             <div class="d-flex">
                 <h2 class="flex-grow-1">QCMs basés sur un modèle</h2>
-                <a type="button" class="btn btn-success" href="{{ route('mcqcreate', ['opt' => 0]) }}">Créer un QCM basé sur un modèle</a>
+                <a type="button" class="btn btn-success" href="{{ route('mcqcreate') }}">Créer un QCM basé sur un modèle</a>
             </div>
             <div class="model-mcqs rounded my-2">
                 <div class="row">
@@ -21,12 +21,21 @@
                     @else
                         @foreach ($data['mcqmodel'] as $mcq)
                         <div class="col-sm-3 model-div-{{$mcq->id}}">
-                            <div class="card mx-auto my-4" style="width: 12rem; height: 14rem;">
+                            <div class="card mx-auto my-4" style="width: 12rem">
                                 <div class="card-body d-flex align-items-center flex-column text-break">
                                     <h5 class="card-title text-center">{{$mcq->title}}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">#{{$mcq->id}}</h6>
                                     <div class="d-flex flex-column justify-content-center align-items-center">
-                                        <a class="btn btn-success" href="{{ route('mcqwatch', $mcq->id) }}">Consulter le QCM</a>
+                                        <div class="form-floating w-100 my-2">
+                                            <select class="form-select number-questions-select" id="questions">
+                                                <option class="update-mcq-exam-button" data-id="NONE" data-mcq="{{$mcq->id}}">Aucun</option>
+                                                @foreach ($data['exams'] as $exam)
+                                                <option class="update-mcq-exam-button" data-id="{{ $exam->id }}" data-mcq="{{$mcq->id}}" @if ($mcq->id_exam != NULL && $mcq->id_exam == $exam->id) selected @endif>#{{ $exam->id }}. {{ $exam->title }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="questions">Examen</label>
+                                        </div>
+                                        <a class="btn btn-success" href="{{ route('correctionwatch', $mcq->id) }}">Corriger le QCM</a>
                                         <a class="btn btn-primary my-2" href="{{ route('mcqpdf', $mcq->id) }}">Obtenir le PDF</a>
                                         <div class='dropdown dropup'>
                                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le QCM</button>
@@ -47,8 +56,8 @@
         </div>
         <div class="my-5">
             <div class="d-flex">
-                <h2 class="flex-grow-1">QCMs basés sur une catégorie</h2>
-                <a type="button" class="btn btn-success" href="{{ route('mcqcreate', ['opt' => 1]) }}">Créer un QCM basé sur une catégorie</a>
+                <h2 class="flex-grow-1">QCMs basés sur un tag</h2>
+                <a type="button" class="btn btn-success" href="{{ route('mcqcreate') }}">Créer un QCM basé sur un tag</a>
             </div>
             <div class="category-mcqs rounded my-2">
                 <div class="row">
@@ -57,12 +66,21 @@
                     @else
                         @foreach ($data['mcqtag'] as $mcq)
                         <div class="col-sm-3 model-div-{{$mcq->id}}">
-                            <div class="card mx-auto my-4" style="width: 12rem; height: 14rem;">
+                            <div class="card mx-auto my-4" style="width: 12rem">
                                 <div class="card-body d-flex align-items-center flex-column text-break">
                                     <h5 class="card-title text-center">{{$mcq->title}}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">#{{$mcq->id}}</h6>
                                     <div class="d-flex flex-column justify-content-center align-items-center">
-                                        <a class="btn btn-success" href="{{ route('mcqwatch', $mcq->id) }}">Consulter le QCM</a>
+                                        <div class="form-floating w-100 my-2">
+                                            <select class="form-select" id="questions">
+                                                <option class="update-mcq-exam-button" data-id="NONE" data-mcq="{{$mcq->id}}">Aucun</option>
+                                                @foreach ($data['exams'] as $exam)
+                                                <option class="update-mcq-exam-button" data-id="{{ $exam->id }}" data-mcq="{{$mcq->id}}" @if ($mcq->id_exam != NULL && $mcq->id_exam == $exam->id) selected @endif>#{{ $exam->id }}. {{ $exam->title }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="questions">Examen</label>
+                                        </div>
+                                        <a class="btn btn-success" href="{{ route('correctionwatch', $mcq->id) }}">Corriger le QCM</a>
                                         <a class="btn btn-primary my-2" href="{{ route('mcqpdf', $mcq->id) }}">Obtenir le PDF</a>
                                         <div class='dropdown dropup'>
                                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le QCM</button>
@@ -84,7 +102,7 @@
         <div class="my-5">
             <div class="d-flex">
                 <h2 class="flex-grow-1">QCMs non classés</h2>
-                <a type="button" class="btn btn-success" href="{{ route('mcqcreate', ['opt' => 2]) }}">Créer un QCM</a>
+                <a type="button" class="btn btn-success" href="{{ route('mcqcreate') }}">Créer un QCM</a>
             </div>
             <div class="unclassed-mcqs rounded my-2">
                 <div class="row">
@@ -93,12 +111,21 @@
                     @else
                         @foreach ($data['mcqunclassed'] as $mcq)
                         <div class="col-sm-3 model-div-{{$mcq->id}}">
-                            <div class="card mx-auto my-4" style="width: 12rem; height: 14rem;">
+                            <div class="card mx-auto my-4" style="width: 12rem">
                                 <div class="card-body d-flex align-items-center flex-column text-break">
                                     <h5 class="card-title text-center">{{$mcq->title}}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">#{{$mcq->id}}</h6>
                                     <div class="d-flex flex-column justify-content-center align-items-center">
-                                        <a class="btn btn-success" href="{{ route('mcqwatch', $mcq->id) }}">Consulter le QCM</a>
+                                        <div class="form-floating w-100 my-2">
+                                            <select class="form-select number-questions-select" id="questions">
+                                                <option class="update-mcq-exam-button" data-id="NONE" data-mcq="{{$mcq->id}}">Aucun</option>
+                                                @foreach ($data['exams'] as $exam)
+                                                <option class="update-mcq-exam-button" data-id="{{ $exam->id }}" data-mcq="{{$mcq->id}}" @if ($mcq->id_exam != NULL && $mcq->id_exam == $exam->id) selected @endif>#{{ $exam->id }}. {{ $exam->title }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="questions">Examen</label>
+                                        </div>
+                                        <a class="btn btn-success" href="{{ route('correctionwatch', $mcq->id) }}">Corriger le QCM</a>
                                         <a class="btn btn-primary my-2" href="{{ route('mcqpdf', $mcq->id) }}">Obtenir le PDF</a>
                                         <div class='dropdown dropup'>
                                             <button type='button' id="dropdownMenuLink" data-bs-toggle="dropdown" class='btn btn-danger'>Détruire le QCM</button>

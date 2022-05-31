@@ -26,7 +26,7 @@
                     <a class="nav-link" href="{{ route('modelmenu') }}">Modèles</a>
                     <a class="nav-link" href="{{ route('qatmenu') }}">Questions</a>
                     <a class="nav-link" href="{{ route('groupsmenu') }}">Groupes et étudiants</a>
-                    <a class="nav-link">Examens</a>
+                    <a class="nav-link" href="{{ route('exammenu') }}">Examens</a>
                 </ul>
                 <div class="dropdown d-flex flex-grow-1">
                     <input type="text" class="form-control question-input-nav py-2 mx-2" placeholder="Rechercher une question..." data-bs-toggle="dropdown">

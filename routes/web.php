@@ -10,6 +10,8 @@ use App\Http\Controllers\MCQController;
 use App\Http\Controllers\QATController;
 use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\ExamController;
+use App\Http\Controllers\CorrectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,13 +90,28 @@ Route::controller(MCQModelDataController::class)->group(function () {
     Route::post('/post/modeldata/delete', 'delete')->name("deletemcqmodeldata");
 });
 
+//Exam
+Route::controller(ExamController::class)->group(function () {
+    Route::post('/post/exam/create', 'create')->name("createexam");
+    Route::post('/post/exam/delete', 'delete')->name("deleteexam");
+    Route::get('/exams', 'menuView')->name('exammenu');
+    Route::get('/exam/{id}', 'examView')->name('examview');
+});
+
+//Correction
+Route::controller(CorrectionController::class)->group(function () {
+    Route::post('/post/correction/create', 'create')->name("createcorrection");
+    Route::post('/post/correction/delete', 'delete')->name("deletecorrection");
+    Route::get('/mcq/correction/{id}', 'watchView')->name('correctionwatch');
+});
+
 //MCQ
 Route::controller(MCQController::class)->group(function () {
     Route::get('/mcqs/menu', 'menuView')->name('mcqmenu');
     Route::get('/mcq/create', 'createView')->name('mcqcreate');
-    Route::get('/mcq/{id}', 'watchView')->name('mcqwatch');
     Route::get('/mcq/pdf/{id}', 'getPdf')->name('mcqpdf');
     Route::post('/post/mcq/create', 'create')->name('createmcq');
+    Route::post('/post/mcq/update', 'update')->name('updatemcq');
     Route::post('/post/mcq/deleteAll', 'deleteAll')->name('deleteallmcq');
     Route::post('/post/mcq/delete', 'delete')->name('deletemcq');
 });

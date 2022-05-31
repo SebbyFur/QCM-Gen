@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_model')->nullable()->default(NULL)->references('id')->on('mcq_model');
             $table->foreignId('id_tag')->nullable()->default(NULL)->references('id')->on('tags');
+            $table->foreignId('id_exam')->nullable()->default(NULL)->references('id')->on('exam');
             $table->foreignId('id_student')->references('id')->on('students');
             $table->timestamps();
         });
