@@ -28,10 +28,13 @@ class CorrectionController extends Controller
             ), 500);
         }
 
+        $mark = MCQ::find(MCQData::find($request->id_mcq_data)->id_mcq)->getMark();
+
         return response()->json(
         array(
             'status' => 'success',
             'id' => $a->id,
+            'mark' => $mark
         ), 200);
     }
 
@@ -49,16 +52,20 @@ class CorrectionController extends Controller
             ), 500);
         }
 
+        $mark = MCQ::find(MCQData::find($request->id_mcq_data)->id_mcq)->getMark();
+
         return response()->json(
         array(
-            'status' => 'success'
+            'status' => 'success',
+            'mark' => $mark
         ), 200);
     }
 
     public function watchView(Request $request) {
         $id = $request->id;
 
-        $title = MCQ::findOrFail($id)->getTitle();
+        $mcq = MCQ::findOrFail($id);
+        $title = $mcq->getTitle();
         $questions = MCQData::join('questions', 'questions.id', '=', 'mcq_data.id_question')
         ->where('id_mcq', $id)
         ->select('questions.id')
@@ -81,7 +88,8 @@ class CorrectionController extends Controller
         $data = [
             'id' => $id,
             'title' => $title,
-            'questions' => $questions
+            'questions' => $questions,
+            'mark' => $mcq->getMark()
         ];
 
         return view('correction.watch', ['data' => $data]);

@@ -13,6 +13,7 @@ use App\Models\Tags;
 use App\Models\QuestionsTags;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\Correction;
 use App\Models\Exam;
 use App\Http\Requests\CreateMCQRequest;
 use App\Http\Requests\UpdateMCQRequest;
@@ -74,6 +75,11 @@ class MCQController extends Controller
         try {
             $mcq = MCQ::findOrFail($request->id);
             $mcqdata = MCQData::where('id_mcq', $mcq->id);
+
+            foreach ($mcqdata->get() as $data) {
+                $correction = Correction::where(['id_mcq_data' => $data->id])->first();
+                if ($correction != NULL) $correction->delete();
+            }
 
             $mcqdata->delete();
             $mcq->delete();
@@ -188,6 +194,7 @@ class MCQController extends Controller
     }
 
     public function deleteAll() {
+        DB::table('correction')->delete();
         DB::table('mcq_data')->delete();
         DB::table('mcq')->delete();
     }
