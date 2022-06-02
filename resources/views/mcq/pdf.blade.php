@@ -61,7 +61,12 @@
         @php ($i = 1)
         @foreach ($data['questions'] as $question)
         <div class="question @if (count($data['questions']) == $i) end-content @endif">
-            <strong>{{ $i++ }}. {{ $question->question }}</strong>
+            <strong>{{ $i++ }}. {{ $question->question }}
+            @if ($question->single_answer == true)
+                (S)
+                @else
+                (M)
+            @endif</strong>
             @foreach ($question->answers as $answer)
             <div class="answer">
                 {{ $answer->choice }}. {{ $answer->answer }}

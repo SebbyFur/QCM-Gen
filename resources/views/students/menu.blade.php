@@ -68,7 +68,7 @@
                     <input type="text" class="edit-student-last-name-input form-control my-5 w-50" placeholder="Entrez un prénom..." hidden>
                 </div>
                 <div class="d-flex justify-content-center my-2">
-                    <button type='button' class='change-group-button btn btn-primary w-50' disabled>Changer le groupe</button>
+                    <button type='button' class='change-group-button btn btn-primary w-50' disabled hidden>Changer le groupe</button>
                 </div>
             </div>
         </div>

@@ -1,13 +1,13 @@
 @extends('layout.app')
 
 @section('title')
-    Consulation
+    Correction
 @endsection
 
 @section('content')
 
 <div class="container">
-    <h1 class="py-5 text-center"><strong>Consulation du QCM #{{ $data['id'] }} : {{ $data['title'] }}</strong></h1>
+    <h1 class="py-5 text-center"><strong>Correction du QCM #{{ $data['id'] }} : {{ $data['title'] }}</strong></h1>
     <h2 class="py-2 text-center mark">{{ $data['mark'] }}% de réussite</h2>
     @foreach ($data['questions'] as $question)
     <ul class="list-group my-5">

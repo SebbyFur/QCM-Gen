@@ -304,6 +304,13 @@ class MCQController extends Controller
             $question->answers = MCQData::join('answers', 'answers.id', '=', 'mcq_data.id_answer')
             ->where(['mcq_data.id_mcq' => $id, 'mcq_data.id_question' => $question->id])
             ->get();
+            $i = 0;
+            foreach ($question->answers as $answer) {
+                if ($answer->is_correct) $i++;
+                if ($i == 2) break;
+            }
+
+            $question->single_answer = $i != 2;
         }
 
         return [
